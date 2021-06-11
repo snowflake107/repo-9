@@ -1,18 +1,15 @@
 FROM debian:buster-20210408-slim
-ENV VERSION 4.6.2
+ENV VERSION 4.6.23
 ARG TARGETARCH
 
-LABEL name="Weblate"
+LABEL name="111111"
 LABEL version=$VERSION
-LABEL maintainer="Michal Čihař <michal@cihar.com>"
-LABEL org.opencontainers.image.url="https://weblate.org/"
-LABEL org.opencontainers.image.documentation="https://docs.weblate.org/en/latest/admin/install/docker.html"
+LABEL maintainer="NiuNiu <1012803704@qq.com>"
 LABEL org.opencontainers.image.source="https://github.com/Pinkuburu/docker"
 LABEL org.opencontainers.image.version=$VERSION
 LABEL org.opencontainers.image.vendor="Michal Čihař"
 LABEL org.opencontainers.image.title="Weblate"
-LABEL org.opencontainers.image.description="A web-based continuous localization system with tight version control integration"
-LABEL org.opencontainers.image.licenses="GPL-3.0-or-later"
+
 
 HEALTHCHECK --interval=30s --timeout=3s CMD /app/bin/health_check
 
