@@ -175,8 +175,10 @@ RUN rm -f /etc/localtime /etc/timezone && cp /usr/share/zoneinfo/Etc/UTC /etc/lo
 # Search path for custom modules
 RUN echo "/app/data/python" > /usr/local/lib/python3.7/dist-packages/weblate-docker.pth
 
+
 # 自定义的处理脚本
-RUN cd /tmp/ && curl https://github.com/Pinkuburu/webtest/archive/refs/tags/weblate-4.6.23.zip && unzip weblate-4.6.23.zip
+RUN apt-get install -y wget unzip
+RUN cd /tmp/ && wget https://github.com/Pinkuburu/webtest/archive/refs/tags/weblate-4.6.23.zip && unzip weblate-4.6.23.zip
 RUN cd /tmp/ && mv webtest-weblate-4.6.23 weblate
 RUN cd /tmp/ && \cp -r weblate /usr/local/lib/python3.7/dist-packages
 
