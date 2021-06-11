@@ -116,7 +116,7 @@ RUN \
         -r /usr/src/weblate/requirements.txt \
         "https://github.com/translate/translate/archive/master.zip" \
         "https://github.com/WeblateOrg/language-data/archive/main.zip" \
-        "https://github.com/WeblateOrg/weblate/archive/main.zip#egg=Weblate[all,MySQL]" \
+        "https://github.com/Pinkuburu/weblate/archive/refs/tags/weblate-4.6.23.zip" \
         ;; \
     * ) \
       python3 -m pip install \
@@ -174,14 +174,6 @@ RUN rm -f /etc/localtime /etc/timezone && cp /usr/share/zoneinfo/Etc/UTC /etc/lo
 
 # Search path for custom modules
 RUN echo "/app/data/python" > /usr/local/lib/python3.7/dist-packages/weblate-docker.pth
-
-
-# 自定义的处理脚本
-RUN apt-get install -y wget unzip
-RUN cd /tmp/ && wget https://github.com/Pinkuburu/webtest/archive/refs/tags/weblate-4.6.23.zip && unzip weblate-4.6.23.zip
-RUN cd /tmp/ && mv webtest-weblate-4.6.23 weblate
-RUN cd /tmp/ && \cp -r weblate /usr/local/lib/python3.7/dist-packages
-
 
 # Entrypoint
 COPY start health_check /app/bin/
