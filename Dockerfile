@@ -115,7 +115,15 @@ RUN \
         "https://github.com/WeblateOrg/language-data/archive/main.zip" \
         "https://github.com/Pinkuburu/weblate/archive/refs/tags/weblate-4.6.23.zip" \
         ;; \
-    * ) \      
+    * ) \
+      python3 -m pip install \
+        --no-cache-dir \
+        -r /usr/src/weblate/requirements.txt \
+        "Weblate[all,MySQL]==$VERSION" \
+        "https://github.com/translate/translate/archive/master.zip" \
+        "https://github.com/WeblateOrg/language-data/archive/main.zip" \
+        "https://github.com/Pinkuburu/weblate/archive/refs/tags/weblate-4.6.23.zip" \
+      ;; \
   esac \
   && python3 -c 'from phply.phpparse import make_parser; make_parser()' \
   && ln -s /usr/local/share/weblate/examples/ /app/ \
