@@ -8,7 +8,7 @@ LABEL maintainer="NiuNiu <1012803704@qq.com>"
 LABEL org.opencontainers.image.source="https://github.com/Pinkuburu/docker"
 LABEL org.opencontainers.image.version=$VERSION
 LABEL org.opencontainers.image.vendor="Michal Čihař"
-LABEL org.opencontainers.image.title="Weblate"
+LABEL org.opencontainers.image.title="111111"
 
 
 HEALTHCHECK --interval=30s --timeout=3s CMD /app/bin/health_check
@@ -115,11 +115,7 @@ RUN \
         "https://github.com/WeblateOrg/language-data/archive/main.zip" \
         "https://github.com/Pinkuburu/weblate/archive/refs/tags/weblate-4.6.23.zip" \
         ;; \
-    * ) \
-      python3 -m pip install \
-        --no-cache-dir \
-        -r /usr/src/weblate/requirements.txt \
-      ;; \
+    * ) \      
   esac \
   && python3 -c 'from phply.phpparse import make_parser; make_parser()' \
   && ln -s /usr/local/share/weblate/examples/ /app/ \
