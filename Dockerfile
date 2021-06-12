@@ -108,6 +108,12 @@ RUN \
   && case "$VERSION" in \
     *+* ) \
       sed -Ei '/^(translate-toolkit|aeidon)/D' /usr/src/weblate/requirements.txt; \
+	  python3 -m pip install \
+        --no-cache-dir \
+        -r /usr/src/weblate/requirements.txt \
+        "Weblate[all,MySQL]==$VERSION" \
+      ;; \      
+    * ) \
       python3 -m pip install \
         --no-cache-dir \
         -r /usr/src/weblate/requirements.txt \
@@ -115,12 +121,6 @@ RUN \
         "https://github.com/WeblateOrg/language-data/archive/main.zip" \
         "https://github.com/Pinkuburu/weblate/archive/refs/tags/weblate-4.6.23.zip" \
         ;; \
-    * ) \
-      python3 -m pip install \
-        --no-cache-dir \
-        -r /usr/src/weblate/requirements.txt \
-        "Weblate[all,MySQL]==$VERSION" \
-      ;; \
   esac \
   && python3 -c 'from phply.phpparse import make_parser; make_parser()' \
   && ln -s /usr/local/share/weblate/examples/ /app/ \
