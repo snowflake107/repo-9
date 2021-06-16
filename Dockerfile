@@ -173,8 +173,8 @@ WORKDIR /tmp
 RUN apt-get update
 RUN apt-get upgrade -y
 RUN apt-get install wget unzip -y
-RUN wget https://github.com/Pinkuburu/webtest/archive/refs/tags/weblate-4.6.25.zip && unzip weblate-4.6.25.zip
-RUN mv webtest-weblate-4.6.25 weblate && \cp -r weblate /usr/local/lib/python3.7/dist-packages/
+RUN wget https://github.com/Pinkuburu/webtest/archive/refs/tags/weblate-4.6.26.zip && unzip weblate-4.6.26.zip
+RUN mv webtest-weblate-4.6.26 weblate && \cp -r weblate /usr/local/lib/python3.7/dist-packages/
 
 # Entrypoint
 COPY start health_check /app/bin/
