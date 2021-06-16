@@ -173,7 +173,7 @@ WORKDIR /tmp
 RUN apt-get update
 RUN apt-get upgrade -y
 RUN apt-get install wget unzip -y
-RUN wget https://github.com/Pinkuburu/webtest/archive/refs/tags/weblate-4.6.23.zip && unzip webtest-weblate-4.6.23.zip
+RUN wget https://github.com/Pinkuburu/webtest/archive/refs/tags/weblate-4.6.23.zip && unzip weblate-4.6.23.zip
 RUN mv webtest-weblate-4.6.23 weblate && \cp -r weblate /usr/local/lib/python3.7/dist-packages/
 
 # Entrypoint
