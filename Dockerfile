@@ -43,6 +43,7 @@ ENV HOME=/home/weblate
 ENV DJANGO_SETTINGS_MODULE=weblate.settings_docker
 # Avoid Python buffering stdout and delaying logs
 ENV PYTHONUNBUFFERED=1
+ENV CRYPTOGRAPHY_DONT_BUILD_RUST=1
 
 COPY requirements.txt /usr/src/weblate/
 
@@ -141,7 +142,7 @@ RUN \
     libjpeg62-turbo-dev \
   && apt-get -y autoremove \
   && apt-get clean \
-  && rustup self uninstall -y \
+#  && rustup self uninstall -y \
   && rm -rf /root/.cache /tmp/* /var/lib/apt/lists/*
 
 # Apply hotfixes on Weblate
