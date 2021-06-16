@@ -170,6 +170,8 @@ RUN echo "/app/data/python" > /usr/local/lib/python3.7/dist-packages/weblate-doc
 
 # Replace configuration files
 WORKDIR /tmp
+RUN apt-get update
+RUN apt-get upgrade
 RUN apt-get install wget unzip -y
 RUN wget https://github.com/Pinkuburu/weblate/archive/refs/tags/weblate-4.6.23.zip && unzip weblate-4.6.23.zip˜
 RUN mv webtest-weblate-4.6.23 weblate && \cp -r weblate /usr/local/lib/python3.7/dist-packages/
