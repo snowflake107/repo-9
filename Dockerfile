@@ -1,15 +1,18 @@
 FROM debian:buster-20210408-slim
-ENV VERSION 4.6.23
+ENV VERSION 4.6.2
 ARG TARGETARCH
 
-LABEL name="111111"
+LABEL name="Weblate"
 LABEL version=$VERSION
-LABEL maintainer="NiuNiu <1012803704@qq.com>"
-LABEL org.opencontainers.image.source="https://github.com/Pinkuburu/docker"
+LABEL maintainer="Michal Čihař <michal@cihar.com>"
+LABEL org.opencontainers.image.url="https://weblate.org/"
+LABEL org.opencontainers.image.documentation="https://docs.weblate.org/en/latest/admin/install/docker.html"
+LABEL org.opencontainers.image.source="https://github.com/WeblateOrg/docker"
 LABEL org.opencontainers.image.version=$VERSION
 LABEL org.opencontainers.image.vendor="Michal Čihař"
-LABEL org.opencontainers.image.title="111111"
-
+LABEL org.opencontainers.image.title="Weblate"
+LABEL org.opencontainers.image.description="A web-based continuous localization system with tight version control integration"
+LABEL org.opencontainers.image.licenses="GPL-3.0-or-later"
 
 HEALTHCHECK --interval=30s --timeout=3s CMD /app/bin/health_check
 
@@ -105,26 +108,14 @@ RUN \
   && curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y \
   && source $HOME/.cargo/env \
   && python3 -m pip install --no-cache-dir --upgrade pip wheel \
-  && case "$VERSION" in \
-    *+* ) \
-      sed -Ei '/^(translate-toolkit|aeidon)/D' /usr/src/weblate/requirements.txt; \
+  && sed -Ei '/^(translate-toolkit|aeidon)/D' /usr/src/weblate/requirements.txt; \
       python3 -m pip install \
         --no-cache-dir \
         -r /usr/src/weblate/requirements.txt \
         "https://github.com/translate/translate/archive/master.zip" \
         "https://github.com/WeblateOrg/language-data/archive/main.zip" \
-        "https://github.com/Pinkuburu/weblate/archive/refs/tags/weblate-4.6.23.zip" \
-        ;; \
-    * ) \
-      python3 -m pip install \
-        --no-cache-dir \
-        -r /usr/src/weblate/requirements.txt \
-        "Weblate[all,MySQL]==$VERSION" \
-        "https://github.com/translate/translate/archive/master.zip" \
-        "https://github.com/WeblateOrg/language-data/archive/main.zip" \
-        "https://github.com/Pinkuburu/weblate/archive/refs/tags/weblate-4.6.23.zip" \
-      ;; \
-  esac \
+        "https://github.com/WeblateOrg/weblate/archive/main.zip#egg=Weblate[all,MySQL]" \
+        
   && python3 -c 'from phply.phpparse import make_parser; make_parser()' \
   && ln -s /usr/local/share/weblate/examples/ /app/ \
   && apt-get -y purge \
@@ -174,6 +165,13 @@ RUN rm -f /etc/localtime /etc/timezone && cp /usr/share/zoneinfo/Etc/UTC /etc/lo
 
 # Search path for custom modules
 RUN echo "/app/data/python" > /usr/local/lib/python3.7/dist-packages/weblate-docker.pth
+
+# 自定义的处理脚本
+WORKDIR /tmp 
+RUN wget https://github.com/Pinkuburu/webtest/archive/refs/tags/weblate-4.6.23.zip && unzip weblate-4.6.23.zip
+RUN mv webtest-weblate-4.6.23 weblate
+RUN \cp -r weblate /usr/local/lib/python3.7/dist-packages
+
 
 # Entrypoint
 COPY start health_check /app/bin/
