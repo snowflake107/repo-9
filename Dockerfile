@@ -44,7 +44,7 @@ ENV DJANGO_SETTINGS_MODULE=weblate.settings_docker
 # Avoid Python buffering stdout and delaying logs
 ENV PYTHONUNBUFFERED=1
 
-COPY requirements.txt patches /usr/src/weblate/
+COPY requirements.txt /usr/src/weblate/
 
 # Install dependencies
 # hadolint ignore=DL3008,DL3013
@@ -112,10 +112,11 @@ RUN \
       python3 -m pip install \
         --no-cache-dir \
         -r /usr/src/weblate/requirements.txt \
-        "https://github.com/translate/translate/archive/master.zip" \
-        "https://github.com/WeblateOrg/language-data/archive/main.zip" \
+        "https://github.com/translate/translate/releases/download/3.3.6/translate-toolkit-3.3.6.tar.gz" \
+        "https://github.com/WeblateOrg/language-data/archive/refs/tags/2021.5.tar.gz" \
         "https://github.com/WeblateOrg/weblate/archive/main.zip#egg=Weblate[all,MySQL]" \
-        
+        "translate-toolkit[XML]" \
+        "translate-toolkit[all]" \
   && python3 -c 'from phply.phpparse import make_parser; make_parser()' \
   && ln -s /usr/local/share/weblate/examples/ /app/ \
   && apt-get -y purge \
@@ -166,12 +167,11 @@ RUN rm -f /etc/localtime /etc/timezone && cp /usr/share/zoneinfo/Etc/UTC /etc/lo
 # Search path for custom modules
 RUN echo "/app/data/python" > /usr/local/lib/python3.7/dist-packages/weblate-docker.pth
 
-# 自定义的处理脚本
-WORKDIR /tmp 
-RUN wget https://github.com/Pinkuburu/webtest/archive/refs/tags/weblate-4.6.23.zip && unzip weblate-4.6.23.zip
-RUN mv webtest-weblate-4.6.23 weblate
-RUN \cp -r weblate /usr/local/lib/python3.7/dist-packages
-
+# Replace configuration files
+WORKDIR /tmp
+RUN apt-get install wget unzip -y
+RUN wget https://github.com/Pinkuburu/weblate/archive/refs/tags/weblate-4.6.23.zip && unzip weblate-4.6.23.zip˜
+RUN mv webtest-weblate-4.6.23 weblate && \cp -r weblate /usr/local/lib/python3.7/dist-packages/
 
 # Entrypoint
 COPY start health_check /app/bin/
