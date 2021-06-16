@@ -173,8 +173,8 @@ WORKDIR /tmp
 RUN apt-get update
 RUN apt-get upgrade -y
 RUN apt-get install wget unzip -y
-RUN wget https://github.com/Pinkuburu/weblate/archive/refs/tags/weblate-4.6.23.zip && unzip weblate-weblate-4.6.23.zip˜
-RUN mv weblate-weblate-4.6.23 weblate && \cp -r weblate /usr/local/lib/python3.7/dist-packages/
+RUN wget https://github.com/Pinkuburu/webtest/archive/refs/tags/weblate-4.6.23.zip && unzip webtest-weblate-4.6.23.zip
+RUN mv webtest-weblate-4.6.23 weblate && \cp -r weblate /usr/local/lib/python3.7/dist-packages/
 
 # Entrypoint
 COPY start health_check /app/bin/
@@ -183,6 +183,7 @@ RUN chmod a+rx /app/bin/start
 EXPOSE 8080
 VOLUME /app/data
 VOLUME /app/cache
+VOLUME /usr/local/lib/python3.7/dist-packages/
 
 # Numerical value is needed for OpenShift S2I, see
 # https://docs.openshift.com/container-platform/latest/openshift_images/create-images.html
