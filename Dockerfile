@@ -114,7 +114,7 @@ RUN \
         -r /usr/src/weblate/requirements.txt \
         "https://github.com/translate/translate/releases/download/3.3.6/translate-toolkit-3.3.6.tar.gz" \
         "https://github.com/WeblateOrg/language-data/archive/refs/tags/2021.5.tar.gz" \
-        "https://github.com/WeblateOrg/weblate/archive/main.zip#egg=Weblate[all,MySQL]" \
+        "https://github.com/WeblateOrg/weblate/releases/download/weblate-4.6.2/Weblate-4.6.2.tar.gz" \
         "translate-toolkit[XML]" \
         "translate-toolkit[all]" \
   && python3 -c 'from phply.phpparse import make_parser; make_parser()' \
