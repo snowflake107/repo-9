@@ -36,14 +36,15 @@ Keep the default setting in the Create stack screen and select **Next**.
 
 Specify the stack details as per the table below and select **Next**.
 
-| Parameter        | Description                                                                                                                                       | Required/Default   |
-|------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|--------------------|
-| `bucketName`     | Name of the bucket you wish to fetch logs from. Will be used for IAM policy.                                                                      | **Required**       |
-| `logzioListener` | The Logz.io listener URL for your region. (For more details, see the [regions page](https://docs.logz.io/user-guide/accounts/account-region.html) | **Required**       |
-| `logzioToken`    | Your Logz.io log shipping token.                                                                                                                  | **Required**       |
-| `logLevel`       | Log level for the Lambda function. Can be one of: `debug`, `info`, `warn`, `error`, `fatal`, `panic`.                                             | Default: `info`    |
-| `logType`        | The log type you'll use with this Lambda. This is shown in your logs under the type field in Kibana. Logz.io applies parsing based on the log type.       | Default: `s3_hook` |
-| `  pathsRegexes` | Comma-seperated list of regexes that match the paths you'd like to pull logs from.                                                                 | -                  |
+| Parameter        | Description                                                                                                                                         | Required/Default   |
+|------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|--------------------|
+| `bucketName`     | Name of the bucket you wish to fetch logs from. Will be used for IAM policy.                                                                        | **Required**       |
+| `logzioListener` | The Logz.io listener URL for your region. (For more details, see the [regions page](https://docs.logz.io/user-guide/accounts/account-region.html)   | **Required**       |
+| `logzioToken`    | Your Logz.io log shipping token.                                                                                                                    | **Required**       |
+| `logLevel`       | Log level for the Lambda function. Can be one of: `debug`, `info`, `warn`, `error`, `fatal`, `panic`.                                               | Default: `info`    |
+| `logType`        | The log type you'll use with this Lambda. This is shown in your logs under the type field in Kibana. Logz.io applies parsing based on the log type. | Default: `s3_hook` |
+| `pathsRegexes`   | Comma-seperated list of regexes that match the paths you'd like to pull logs from.                                                                  | -                  |
+| `pathToFields`   | Fields from the path to your logs directory that you want to add to the logs. For example, `org-id/aws-type/account-id` will add each of the fields `ord-id`, `was-type` and `account-id` to the logs that are fetched from the directory that this path refers to.                                                                                                                                                | -                  |
 
 
 ![Step 2 screenshot](img/02.png)
@@ -91,10 +92,28 @@ If there are specific paths within the bucket that you want to pull logs from, y
 This variable should hold a comma-seperated list of regexes that match the paths you wish to extract logs from.
 **Note**: this will still trigger your Lambda function every time a new object is added to your bucket. However, if the key does not match the regexes, the function will quit and won't send the logs.
 
+
+#### Adding object path as logs field
+
+In case you want to use your objects' path as extra fields in your logs, you can do so by using `pathToFields`.
+
+For example, if your objects are under the path: `oi-3rfEFA4/AWSLogs/2378194514/file.log`, where `oi-3rfEFA4` is org id, `AWSLogs` is aws type, and `2378194514` is account id. 
+
+Setting `pathToFields` with the value: `org-id/aws-type/account-id` will add to logs the following fields:
+`org-id`: `oi-3rfEFA4`, `aws-type`: `AWSLogs`, `account-id`: `2378194514`.
+
+**Important notes about `pathToFields`**:
+
+1. This will override a field with the same key, if it exists.
+2. In order for the feature to work, you need to set `pathToFields` from the root of the bucket.
+
+
+
 ## Changelog
 
 - **0.1.0**:
   - Add ability to filter paths with regex list in field `pathsRegexes`.
+  - Add ability to map bucket path as log fields with `pathToFields`.
 - **0.0.2**:
   - **Bug fix**: Decodes folder names, for folders with special characters.
 - **0.0.1**: Initial release.
