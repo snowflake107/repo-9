@@ -88,7 +88,13 @@ Setting `pathToFields` with the value: `org-id/aws-type/account-id` will add to 
 1. This will override a field with the same key, if it exists.
 2. In order for the feature to work, you need to set `pathToFields` from the root of the bucket.
 
-#### Control Tower support
+#### Automatic parsing:
+
+**S3 Hook** will automatically parse logs in the following cases:
+
+- The object's path contains the phrase `cloudtrail` (case insensitive).
+
+#### Control Tower support:
 
 If you want to ship Control Tower logs, after the deployment of the S3 Hook stack, you'll need to deploy an additional stack.
 For more details [click here](https://github.com/logzio/s3-hook/tree/master/control_tower).
@@ -99,6 +105,7 @@ For more details [click here](https://github.com/logzio/s3-hook/tree/master/cont
   - Add ability to filter paths with regex list in field `pathsRegexes`.
   - Add ability to map bucket path as log fields with `pathToFields`.
   - Add support for Control Tower.
+  - Automatically detect and parse **CloudTrail** logs.
 - **0.0.2**:
   - **Bug fix**: Decodes folder names, for folders with special characters.
 - **0.0.1**: Initial release.
