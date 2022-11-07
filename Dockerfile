@@ -6,4 +6,5 @@ RUN echo "Image generated" > /var/www/html/index.html
 COPY test.html /var/www/html/test.html
 
 EXPOSE 80
+USER root
 CMD /usr/sbin/apache2ctl -D FOREGROUND
