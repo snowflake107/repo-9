@@ -1,6 +1,6 @@
 [package]
 name = "informalsystems-pbjson-test"
-version = "0.5.1"
+version = "0.6.0"
 authors = ["Raphael Taylor-Davies <r.taylordavies@googlemail.com>"]
 edition = "2021"
 description = "Test resources for pbjson converion"
@@ -11,7 +11,7 @@ publish = false
 name = "pbjson_test"
 
 [dependencies]
-prost = { version = "0.11", default-features = false}
+prost = { version = "0.11", default-features = false, features = ["prost-derive"] }
 informalsystems-pbjson = { path = "../pbjson" , default-features = false}
 informalsystems-pbjson-types = { path = "../pbjson-types" , default-features = false}
 serde = { version = "1.0", default-features = false, features = ["derive", "alloc"] }

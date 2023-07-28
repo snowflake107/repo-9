@@ -5,3 +5,7 @@ members = [
   "pbjson-test",
   "pbjson-types",
 ]
+
+exclude = [
+  "pbjson-no-std"
+]

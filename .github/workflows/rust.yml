@@ -80,8 +80,13 @@ jobs:
         with:
           command: nextest
           args: run --all-features --no-fail-fast --no-capture
-      - name: Run tests (no-std)
+      - name: Run tests (no_std)
         uses: actions-rs/cargo@v1
         with:
           command: nextest
           args: run --no-default-features --no-fail-fast --no-capture
+      - name: Check no_std compatibility
+        uses: actions-rs/cargo@v1
+        with:
+          command: rustc
+          args: --manifest-path pbjson-no-std/Cargo.toml -- -C link-arg=-nostartfiles
