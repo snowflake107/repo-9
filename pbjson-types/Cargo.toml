@@ -22,7 +22,7 @@ informalsystems-pbjson = { path = "../pbjson", version = "0.6.0" , default-featu
 
 bytes = { version = "1.0", default-features = false }
 chrono = { version = "0.4", default-features = false, features = ["alloc"] }
-prost = { version = "0.11", default-features = false, features = ["prost-derive"] }
+prost = { version = "0.12", default-features = false, features = ["prost-derive"] }
 serde = { version = "1.0", features = ["derive"], default-features = false }
 
 [dev-dependencies]
@@ -30,4 +30,4 @@ serde_json = { version = "1.0", default-features = false, features = ["alloc"] }
 
 [build-dependencies]
 informalsystems-pbjson-build = { path = "../pbjson-build", version = "0.6.0" }
-prost-build = "0.11"
+prost-build = "0.12"

@@ -1,11 +1,12 @@
 [workspace]
 members = [
-  "pbjson",
-  "pbjson-build",
-  "pbjson-test",
-  "pbjson-types",
+    "pbjson",
+    "pbjson-build",
+    "pbjson-test",
+    "pbjson-types",
 ]
 
 exclude = [
   "pbjson-no-std"
 ]
+resolver = "2"

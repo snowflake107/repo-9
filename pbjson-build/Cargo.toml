@@ -14,9 +14,9 @@ name = "pbjson_build"
 
 [dependencies]
 heck = "0.4"
-prost = "0.11"
-prost-types = "0.11"
-itertools = "0.10"
+prost = "0.12"
+prost-types = "0.12"
+itertools = "0.12"
 
 [dev-dependencies]
 tempfile = "3.1"

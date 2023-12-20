@@ -11,7 +11,7 @@ publish = false
 name = "pbjson_test"
 
 [dependencies]
-prost = { version = "0.11", default-features = false, features = ["prost-derive"] }
+prost = { version = "0.12", default-features = false, features = ["prost-derive"] }
 informalsystems-pbjson = { path = "../pbjson" , default-features = false}
 informalsystems-pbjson-types = { path = "../pbjson-types" , default-features = false}
 serde = { version = "1.0", default-features = false, features = ["derive", "alloc"] }
@@ -30,5 +30,5 @@ chrono = "0.4"
 serde_json = "1.0"
 
 [build-dependencies]
-prost-build = "0.11"
+prost-build = "0.12"
 informalsystems-pbjson-build = { path = "../pbjson-build" }

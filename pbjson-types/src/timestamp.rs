@@ -1,18 +1,21 @@
 use crate::Timestamp;
-use chrono::{DateTime, NaiveDateTime, Utc};
+use chrono::{DateTime, NaiveDateTime, TimeZone, Utc};
 use serde::de::Visitor;
 use serde::Serialize;
 
-impl TryFrom<Timestamp> for chrono::DateTime<Utc> {
-    type Error = core::num::TryFromIntError;
+impl TryFrom<Timestamp> for DateTime<Utc> {
+    type Error = &'static str;
     fn try_from(value: Timestamp) -> Result<Self, Self::Error> {
         let Timestamp { seconds, nanos } = value;
-        let dt = NaiveDateTime::from_timestamp_opt(seconds, nanos.try_into()?);
 
-        Ok(Self::from_utc(
-            dt.expect("invalid or out-of-range datetime"),
-            Utc,
-        ))
+        let dt = NaiveDateTime::from_timestamp_opt(
+            seconds,
+            nanos
+                .try_into()
+                .map_err(|_| "out of range integral type conversion attempted")?,
+        )
+        .ok_or("invalid or out-of-range datetime")?;
+        Ok(Utc.from_utc_datetime(&dt))
     }
 }
 
@@ -73,7 +76,7 @@ mod tests {
     #[test]
     fn test_date() {
         let datetime = FixedOffset::east_opt(5 * 3600)
-            .unwrap()
+            .expect("time zone offset should be valid")
             .with_ymd_and_hms(2016, 11, 8, 21, 7, 9)
             .unwrap();
         let encoded = datetime.to_rfc3339();

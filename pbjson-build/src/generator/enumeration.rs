@@ -11,6 +11,7 @@ use super::{
 use crate::descriptor::{EnumDescriptor, TypePath};
 use crate::generator::write_fields_array;
 use crate::resolver::Resolver;
+use std::collections::HashSet;
 use std::io::{Result, Write};
 
 pub fn generate_enum<W: Write>(
@@ -22,9 +23,13 @@ pub fn generate_enum<W: Write>(
 ) -> Result<()> {
     let rust_type = resolver.rust_type(path);
 
+    let mut seen_numbers = HashSet::new();
     let variants: Vec<_> = descriptor
         .values
         .iter()
+        // Skip duplicates if we've seen the number before
+        // Protobuf's `allow_alias` option permits duplicates if set
+        .filter(|variant| seen_numbers.insert(variant.number()))
         .map(|variant| {
             let variant_name = variant.name.clone().unwrap();
             let variant_number = variant.number();
@@ -104,10 +109,9 @@ fn write_visitor<W: Write>(
 {indent}    where
 {indent}        E: serde::de::Error,
 {indent}    {{
-{indent}        use core::convert::TryFrom;
 {indent}        i32::try_from(v)
 {indent}            .ok()
-{indent}            .and_then({rust_type}::from_i32)
+{indent}            .and_then(|x| x.try_into().ok())
 {indent}            .ok_or_else(|| {{
 {indent}                serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
 {indent}            }})
@@ -117,10 +121,9 @@ fn write_visitor<W: Write>(
 {indent}    where
 {indent}        E: serde::de::Error,
 {indent}    {{
-{indent}        use core::convert::TryFrom;
 {indent}        i32::try_from(v)
 {indent}            .ok()
-{indent}            .and_then({rust_type}::from_i32)
+{indent}            .and_then(|x| x.try_into().ok())
 {indent}            .ok_or_else(|| {{
 {indent}                serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
 {indent}            }})
