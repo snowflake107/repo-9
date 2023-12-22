@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.7.0
+
+This release integrates [`influxdata/pbjson`](https://github.com/influxdata/pbjson) v0.6.2 enhancements and upgrades `prost` dependency to v0.12.
+
 ## v0.6.0
 
 ## Breaking changes
@@ -22,4 +26,3 @@
 ## Previous versions
 
 There was no changelog for versions prior to 0.6.0.
-
