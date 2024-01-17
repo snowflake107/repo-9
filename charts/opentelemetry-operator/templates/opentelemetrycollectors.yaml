@@ -1,0 +1,11 @@
+{{ if .Values.otel_collector.enabled }}
+apiVersion: opentelemetry.io/v1alpha1
+kind: OpenTelemetryCollector
+metadata:
+  name: otel-collector
+  labels:
+    component: opentelemetry-operator
+    namespace: {{ .Release.Namespace }}
+spec:
+  config: {{ .Values.otel_collector.config | toYaml }}
+{{ end }}

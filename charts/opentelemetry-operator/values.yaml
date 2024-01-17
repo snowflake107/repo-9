@@ -272,3 +272,7 @@ instrumentation:
   sampler: {}
 #   type: parentbased_traceidratio
 #   argument: "1"
+
+otel_collector:
+  enabled: false
+  config: {}
