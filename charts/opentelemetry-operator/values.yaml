@@ -265,3 +265,10 @@ testFramework:
   image:
     repository: busybox
     tag: latest
+
+instrumentation:
+  enabled: false
+  exporter_endpoint: ""
+  sampler: {}
+#   type: parentbased_traceidratio
+#   argument: "1"
