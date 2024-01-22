@@ -2,13 +2,32 @@
 apiVersion: opentelemetry.io/v1alpha1
 kind: Instrumentation
 metadata:
-  name: default-instrumentation
+  name: java-nodejs-instrumentation
   labels:
     component: opentelemetry-operator
     namespace: {{ .Release.Namespace }}
 spec:
   exporter:
-    endpoint: {{ .Values.instrumentation.exporter_endpoint }}
+    endpoint: {{ .Values.instrumentation.exporter_endpoint }}:4317
+  propagators:
+    - tracecontext
+    - baggage
+    - b3
+  {{- with .Values.instrumentation.sampler }}
+  sampler:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+---
+apiVersion: opentelemetry.io/v1alpha1
+kind: Instrumentation
+metadata:
+  name: python-go-instrumentation
+  labels:
+    component: opentelemetry-operator
+    namespace: {{ .Release.Namespace }}
+spec:
+  exporter:
+    endpoint: {{ .Values.instrumentation.exporter_endpoint }}:4318
   propagators:
     - tracecontext
     - baggage

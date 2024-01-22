@@ -1,6 +1,6 @@
 apiVersion: v2
 name: opentelemetry-operator
-version: 0.34.22
+version: 0.34.23
 description: OpenTelemetry Operator Helm chart for Kubernetes
 type: application
 home: https://opentelemetry.io/
