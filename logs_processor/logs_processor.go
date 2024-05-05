@@ -94,7 +94,7 @@ func processJsonLogs(s3Logs []string, logger *zap.Logger, key, bucket, awsRegion
 			continue
 		}
 
-		var logsJsons []map[string]interface{}
+		var logsJsons map[string]interface{}
 		err := json.Unmarshal([]byte(s3Log), &logsJsons)
 
 		if err != nil {
