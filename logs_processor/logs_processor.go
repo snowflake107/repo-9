@@ -94,13 +94,16 @@ func processJsonLogs(s3Logs []string, logger *zap.Logger, key, bucket, awsRegion
 			continue
 		}
 
-		var logsJsons map[string]interface{}
-		err := json.Unmarshal([]byte(s3Log), &logsJsons)
+		var logsJsons []map[string]interface{}
+		var logJson map[string]interface{}
+		err := json.Unmarshal([]byte(s3Log), &logJson)
 
 		if err != nil {
 			logger.Error(fmt.Sprintf("Error occurred while trying to marshal json log: %s", err.Error()))
 			logger.Error("Will try to send as a regular string...")
 			logsJsons = []map[string]interface{}{{fieldMessage: s3Log}}
+		} else {
+			logsJsons = append(logsJsons, logJson)
 		}
 		logs = addFieldsAndAppendLogsToFinalList(logs, logsJsons, logger, key, bucket, awsRegion, controlTowerParsing)
 	}
