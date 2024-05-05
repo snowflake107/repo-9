@@ -219,8 +219,12 @@ func addControlTowerParsing(controlTowerParsing, objectKey string, log map[strin
 	logger.Debug(fmt.Sprintf("received from user %d keys to add to log: %v", len(parsingKeys), parsingKeys))
 	parsingValues := strings.Split(objectKey, "/")
 
-	for index, pk := range parsingKeys {
-		logger.Debug(fmt.Sprintf("Adding key: %s with value %s", pk, parsingValues[index]))
-		log[pk] = parsingValues[index]
+	if len(parsingKeys) == len(parsingValues) {
+		for index, pk := range parsingKeys {
+			logger.Debug(fmt.Sprintf("Adding key: %s with value %s", pk, parsingValues[index]))
+			log[pk] = parsingValues[index]
+		}
+	} else {
+		logger.Warn(fmt.Sprintf("Expected %d keys (%s), but found %d values (%s). Skipping addition of the custom fields", len(parsingKeys), parsingKeys, len(parsingValues), parsingValues))
 	}
 }
