@@ -103,7 +103,7 @@ For more details [click here](https://github.com/logzio/s3-hook/tree/master/cont
 
 - **0.4.2**:
   - Bug fix:
-    - Support all needed file extensions.
+    - Support all needed file extensions: `.gz`, `.zip`, `.txt`, `.log`, `.json` (other file formats are treated as plain text).
     - Validation on `pathToFields` to ensure correspondence between the number of keys and values.
 - **0.4.1**:
   - Upgrading the control tower runtime to `provided.al2023` to ensure compatibility with AWS.
