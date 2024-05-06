@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"go.uber.org/zap"
-	"io/ioutil"
+	"io"
 	"strings"
 )
 
@@ -20,6 +20,18 @@ const (
 	defaultLogType = "s3_hook"
 )
 
+/*
+ProcessLogs receives an S3 object and it's bucket details, exports logs from it's content, adds custom fields to them
+and returns the logs in an array of bytes.
+
+s3Object: the AWS s3 Object to extract content from
+logger: the logger to log the function logs to
+key: the path of the S3 object
+bucket: the name of S3 bucket
+awsRegion: the name of the object region in AWS
+
+returns: array of the processed logs as bytes.
+*/
 func ProcessLogs(s3Object *s3.GetObjectOutput, logger *zap.Logger, key, bucket, awsRegion string) [][]byte {
 	// Initializing variables
 	var logsStr string
@@ -112,20 +124,25 @@ func processJsonLogs(s3Logs []string, logger *zap.Logger, key, bucket, awsRegion
 
 func addFieldsAndAppendLogsToFinalList(logs [][]byte, logsJsons []map[string]interface{}, logger *zap.Logger, key, bucket, awsRegion string, controlTowerParsing string) [][]byte {
 	for _, logJson := range logsJsons {
+		// Add fields to the logs
 		addLogzioFields(logJson, bucket, key, awsRegion)
 		if len(controlTowerParsing) > 0 {
 			addControlTowerParsing(controlTowerParsing, key, logJson, logger)
 		}
 
+		// Add the processed logs to the final logs array
 		logBytes, err := json.Marshal(logJson)
 		if err != nil {
 			logger.Error(fmt.Sprintf("Error occurred while processing %s: %s", logJson, err.Error()))
 			logger.Error("log will be dropped")
+			continue
 		}
 
 		if logBytes != nil && len(logBytes) > 0 {
 			logger.Debug(fmt.Sprintf("Adding log %s to logs list", string(logBytes)))
 			logs = append(logs, logBytes)
+		} else {
+			logger.Debug(fmt.Sprintf("Got empty log %s, skipping it.", string(logBytes)))
 		}
 	}
 	return logs
@@ -164,7 +181,7 @@ func getBody(buf *bytes.Buffer, logger *zap.Logger) string {
 
 func decompressZip(buf *bytes.Buffer, logger *zap.Logger) ([]byte, error) {
 	var decompressed bytes.Buffer
-	body, err := ioutil.ReadAll(buf)
+	body, err := io.ReadAll(buf)
 	if err != nil {
 		return nil, err
 	}
@@ -196,7 +213,7 @@ func readZipFile(zf *zip.File) ([]byte, error) {
 		return nil, err
 	}
 	defer f.Close()
-	return ioutil.ReadAll(f)
+	return io.ReadAll(f)
 }
 
 func decompressGzip(buf *bytes.Buffer) ([]byte, error) {
