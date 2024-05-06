@@ -9,7 +9,6 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 	"go.uber.org/zap"
 	"io"
-	"io/ioutil"
 	"strings"
 )
 
@@ -21,104 +20,132 @@ const (
 	defaultLogType = "s3_hook"
 )
 
+/*
+ProcessLogs receives an S3 object and it's bucket details, exports logs from it's content, adds custom fields to them
+and returns the logs in an array of bytes.
+
+s3Object: the AWS s3 Object to extract content from
+logger: the logger to log the function logs to
+key: the path of the S3 object
+bucket: the name of S3 bucket
+awsRegion: the name of the object region in AWS
+
+returns: array of the processed logs as bytes.
+*/
 func ProcessLogs(s3Object *s3.GetObjectOutput, logger *zap.Logger, key, bucket, awsRegion string) [][]byte {
-	if strings.HasSuffix(strings.ToLower(key), ".txt") || strings.HasSuffix(strings.ToLower(key), ".log") {
+	// Initializing variables
+	var logsStr string
+	buf := new(bytes.Buffer)
 
-		logs := make([][]byte, 0)
-		var logsJsons []map[string]interface{}
-		var logsStr string
-		buf := new(bytes.Buffer)
-		_, err := buf.ReadFrom(s3Object.Body)
-
-		if err != nil {
-			logger.Error(fmt.Sprintf("Cannot proccess object %s. Error: %s", key, err.Error()))
-			return nil
-		}
-
-		controlTowerParsing := getControlTowerParsing()
-
-		logsStr = getBody(buf, logger)
-		s3Logs := strings.Split(logsStr, "\n")
-		keyLower := strings.ToLower(key)
-		for _, s3Log := range s3Logs {
-			if len(s3Log) == 0 {
-				continue
-			}
-
-			if strings.Contains(keyLower, cloudtrailName) {
-				logsJsons = extractCloudtrailLogsFromFile(s3Log, logger)
-				logger.Debug(fmt.Sprintf("detected %s logs", cloudtrailName))
-			} else {
-				logsJsons = []map[string]interface{}{{fieldMessage: s3Log}}
-			}
-
-			for _, logJson := range logsJsons {
-				addLogzioFields(logJson, bucket, key, awsRegion)
-				if len(controlTowerParsing) > 0 {
-					addControlTowerParsing(controlTowerParsing, key, logJson, logger)
-				}
-
-				logBytes, err := json.Marshal(logJson)
-				if err != nil {
-					logger.Error(fmt.Sprintf("Error occurred while processing %s: %s", logJson, err.Error()))
-					logger.Error("log will be dropped")
-				}
-
-				if logBytes != nil && len(logBytes) > 0 {
-					logger.Debug(fmt.Sprintf("Adding log %s to logs list", string(logBytes)))
-					logs = append(logs, logBytes)
-				}
-			}
-		}
-
-		return logs
-	} else if strings.HasSuffix(strings.ToLower(key), ".json") {
-		// Read the JSON body into a byte slice using io.ReadAll.
-		bodyBytes, err := io.ReadAll(s3Object.Body)
-		if err != nil {
-			logger.Error("Failed to read JSON body", zap.Error(err))
-			return nil
-		}
-		// Ensure the body is closed after reading.
-		defer func() {
-			err := s3Object.Body.Close()
-			if err != nil {
-				// Handle the error or log it if necessary.
-				logger.Error("Failed to close s3Object.Body", zap.Error(err))
-			}
-		}()
-
-		// Prepare a buffer for the compacted JSON.
-		var compactedBuffer bytes.Buffer
-
-		// Use json.Compact to write the compacted JSON to the buffer.
-		if err := json.Compact(&compactedBuffer, bodyBytes); err != nil {
-			logger.Error("Failed to compact JSON", zap.Error(err))
-			return nil
-		}
-
-		// Unmarshal the compacted JSON to a map for manipulation.
-		var logJson map[string]interface{}
-		if err := json.Unmarshal(compactedBuffer.Bytes(), &logJson); err != nil {
-			logger.Error("Failed to unmarshal compacted JSON", zap.Error(err))
-			return nil
-		}
-
-		// Apply the addLogzioFields function.
-		addLogzioFields(logJson, bucket, key, awsRegion)
-
-		// Marshal the modified map back to a byte slice.
-		modifiedBytes, err := json.Marshal(logJson)
-		if err != nil {
-			logger.Error("Failed to marshal modified JSON", zap.Error(err))
-			return nil
-		}
-
-		return [][]byte{modifiedBytes}
-	} else {
-		logger.Info(fmt.Sprintf("Ignoring unsupported file type for key: %s", key))
+	// Read file
+	_, err := buf.ReadFrom(s3Object.Body)
+	if err != nil {
+		logger.Error(fmt.Sprintf("Cannot proccess object %s. Error: %s", key, err.Error()))
 		return nil
 	}
+
+	// Decompress if needed and extract logs from file
+	logsStr = getBody(buf, logger)
+	s3Logs := strings.Split(logsStr, "\n")
+	keyLower := strings.ToLower(key)
+
+	// Process logs in the detected format
+	if strings.Contains(keyLower, cloudtrailName) {
+		logger.Debug(fmt.Sprintf("Detected %s logs", cloudtrailName))
+		return processCloudTrailLogs(s3Logs, logger, key, bucket, awsRegion)
+	} else if strings.HasSuffix(keyLower, "json.gzip") || strings.HasSuffix(keyLower, "json.zip") || strings.HasSuffix(keyLower, "json") {
+		logger.Debug("Detected Json logs.")
+		return processJsonLogs(s3Logs, logger, key, bucket, awsRegion)
+	}
+	logger.Debug("Processing the logs as Text.")
+	return processTxtLogs(s3Logs, logger, key, bucket, awsRegion)
+}
+
+func processCloudTrailLogs(s3Logs []string, logger *zap.Logger, key, bucket, awsRegion string) [][]byte {
+	// Initializing variables
+	logs := make([][]byte, 0)
+	var logsJsons []map[string]interface{}
+
+	// Process logs
+	controlTowerParsing := getControlTowerParsing()
+	for _, s3Log := range s3Logs {
+		if len(s3Log) == 0 {
+			continue
+		}
+		logsJsons = extractCloudtrailLogsFromFile(s3Log, logger)
+		logs = addFieldsAndAppendLogsToFinalList(logs, logsJsons, logger, key, bucket, awsRegion, controlTowerParsing)
+	}
+	return logs
+}
+
+func processTxtLogs(s3Logs []string, logger *zap.Logger, key, bucket, awsRegion string) [][]byte {
+	// Initializing variables
+	logs := make([][]byte, 0)
+	var logsJsons []map[string]interface{}
+
+	// Process logs
+	controlTowerParsing := getControlTowerParsing()
+	for _, s3Log := range s3Logs {
+		if len(s3Log) == 0 {
+			continue
+		}
+		logsJsons = []map[string]interface{}{{fieldMessage: s3Log}}
+		logs = addFieldsAndAppendLogsToFinalList(logs, logsJsons, logger, key, bucket, awsRegion, controlTowerParsing)
+	}
+	return logs
+}
+
+func processJsonLogs(s3Logs []string, logger *zap.Logger, key, bucket, awsRegion string) [][]byte {
+	// Initializing variables
+	logs := make([][]byte, 0)
+
+	// Process logs
+	controlTowerParsing := getControlTowerParsing()
+	for _, s3Log := range s3Logs {
+		if len(s3Log) == 0 {
+			continue
+		}
+
+		var logsJsons []map[string]interface{}
+		var logJson map[string]interface{}
+		err := json.Unmarshal([]byte(s3Log), &logJson)
+
+		if err != nil {
+			logger.Error(fmt.Sprintf("Error occurred while trying to marshal json log: %s", err.Error()))
+			logger.Error("Will try to send as a regular string...")
+			logsJsons = []map[string]interface{}{{fieldMessage: s3Log}}
+		} else {
+			logsJsons = append(logsJsons, logJson)
+		}
+		logs = addFieldsAndAppendLogsToFinalList(logs, logsJsons, logger, key, bucket, awsRegion, controlTowerParsing)
+	}
+	return logs
+}
+
+func addFieldsAndAppendLogsToFinalList(logs [][]byte, logsJsons []map[string]interface{}, logger *zap.Logger, key, bucket, awsRegion string, controlTowerParsing string) [][]byte {
+	for _, logJson := range logsJsons {
+		// Add fields to the logs
+		addLogzioFields(logJson, bucket, key, awsRegion)
+		if len(controlTowerParsing) > 0 {
+			addControlTowerParsing(controlTowerParsing, key, logJson, logger)
+		}
+
+		// Add the processed logs to the final logs array
+		logBytes, err := json.Marshal(logJson)
+		if err != nil {
+			logger.Error(fmt.Sprintf("Error occurred while processing %s: %s", logJson, err.Error()))
+			logger.Error("log will be dropped")
+			continue
+		}
+
+		if logBytes != nil && len(logBytes) > 0 {
+			logger.Debug(fmt.Sprintf("Adding log %s to logs list", string(logBytes)))
+			logs = append(logs, logBytes)
+		} else {
+			logger.Debug(fmt.Sprintf("Got empty log %s, skipping it.", string(logBytes)))
+		}
+	}
+	return logs
 }
 
 func addLogzioFields(logzioLog map[string]interface{}, bucket, key, awsRegion string) {
@@ -154,7 +181,7 @@ func getBody(buf *bytes.Buffer, logger *zap.Logger) string {
 
 func decompressZip(buf *bytes.Buffer, logger *zap.Logger) ([]byte, error) {
 	var decompressed bytes.Buffer
-	body, err := ioutil.ReadAll(buf)
+	body, err := io.ReadAll(buf)
 	if err != nil {
 		return nil, err
 	}
@@ -186,7 +213,7 @@ func readZipFile(zf *zip.File) ([]byte, error) {
 		return nil, err
 	}
 	defer f.Close()
-	return ioutil.ReadAll(f)
+	return io.ReadAll(f)
 }
 
 func decompressGzip(buf *bytes.Buffer) ([]byte, error) {
@@ -212,8 +239,12 @@ func addControlTowerParsing(controlTowerParsing, objectKey string, log map[strin
 	logger.Debug(fmt.Sprintf("received from user %d keys to add to log: %v", len(parsingKeys), parsingKeys))
 	parsingValues := strings.Split(objectKey, "/")
 
-	for index, pk := range parsingKeys {
-		logger.Debug(fmt.Sprintf("Adding key: %s with value %s", pk, parsingValues[index]))
-		log[pk] = parsingValues[index]
+	if len(parsingKeys) == len(parsingValues) {
+		for index, pk := range parsingKeys {
+			logger.Debug(fmt.Sprintf("Adding key: %s with value %s", pk, parsingValues[index]))
+			log[pk] = parsingValues[index]
+		}
+	} else {
+		logger.Warn(fmt.Sprintf("Expected %d keys (%s), but found %d values (%s). Skipping addition of the custom fields", len(parsingKeys), parsingKeys, len(parsingValues), parsingValues))
 	}
 }
