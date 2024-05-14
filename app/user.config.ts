@@ -12,7 +12,8 @@ import {
   whatsappIcon,
   xIcon,
   youtubeIcon,
-  logodcc
+  logodcc,
+  Discord
 } from "@/assets";
 
 
@@ -42,24 +43,14 @@ const userConfig: UserConfigType = {
       title: "LinkedIn",
       description: "Connect with DCC! 🌐",
     },
-    {
-      url: "#",
-      iconSrc: logodcc,
-      title: "Official Website",
-      description: " Dream Code Conquer🌟",
-    },
+    
     {
       url: "https://www.instagram.com/dccnita/",
       iconSrc: instagramIcon,
       title: "Instagram",
       description: "Our official insta handle 📷",
     },
-    {
-      url: "https://cphub.dccnita.in/",
-      iconSrc: logodcc,
-      title: "CP Hub",
-      description: "Competitive Programming hub ",
-    },
+   
     {
       url: "#",
       iconSrc: whatsappIcon,
@@ -73,29 +64,43 @@ const userConfig: UserConfigType = {
       description: "Messaging focusing on speed and security 🚀",
     },
     {
+      url: "https://dccnita.in/",
+      iconSrc: logodcc,
+      title: "Official Website",
+      description: " Dream Code Conquer🌟",
+    },
+    {
+      url: "bit.ly/dccResources",
+      iconSrc: logodcc,
+      title: "Resources",
+      description: "Link for resources  💙",
+    },
+    {
+      url: "https://cphub.dccnita.in/",
+      iconSrc: logodcc,
+      title: "CP Hub",
+      description: "Competitive Programming hub ",
+    },
+    {
+      url: "https://twitter.com/dccnita?t=wa7G9AW_mHU1jYi5Mfml-Q&s=08",
+      iconSrc: threadsIcon,
+      title: "Threads",
+      description: "Quick updates and stories! 🌀",
+    },
+    {
       url: "https://www.youtube.com/@DCCNITA",
       iconSrc: youtubeIcon,
       title: "YouTube",
       description: "Discover, watch, and share your passion 🎥",
     },
     {
-      url: "#",
-      iconSrc: mastodonIcon,
+      url: "https://discord.gg/Ta84z5K5Vb",
+      iconSrc: Discord,
       title: "Discord",
       description: "Connect with DCC on discord",
     },
-    {
-      url: "#",
-      iconSrc: blueSkyIcon,
-      title: "BlueSky",
-      description: "Exploring open social web 💙",
-    },
-    {
-      url: "#",
-      iconSrc: threadsIcon,
-      title: "Threads",
-      description: "Quick updates and stories! 🌀",
-    },
+    
+    
   ],
 };
 
