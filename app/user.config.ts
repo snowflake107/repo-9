@@ -12,51 +12,53 @@ import {
   whatsappIcon,
   xIcon,
   youtubeIcon,
+  logodcc
 } from "@/assets";
 
+
 const userConfig: UserConfigType = {
-  avatarSrc: "/assets/avatar.webp",
+  avatarSrc: "/assets/logodcc.png",
   avatarAlt: "Avatar",
-  fullName: "Your Name",
-  alias: "@your_alias",
+  fullName: "DCC",
+  alias: "@dcc",
   metaTitle: "LinkFolio",
   metaDescription: "A hub for all your online links 🔗",
   socialNetworks: [
     {
-      url: "#",
+      url: "https://twitter.com/dccnita?t=wa7G9AW_mHU1jYi5Mfml-Q&s=08",
       iconSrc: xIcon,
       title: "Twitter / X",
-      description: "#DevLife #CodeNewbie 🐦",
+      description: "@dccnita",
     },
     {
-      url: "#",
+      url: "https://github.com/Developers-and-Coders-Club",
       iconSrc: githubIcon,
       title: "GitHub",
-      description: "Versioning my projects 📁",
+      description: "Develop with DCC",
     },
     {
-      url: "#",
+      url: "https://www.linkedin.com/company/dccnita/",
       iconSrc: linkedinIcon,
       title: "LinkedIn",
-      description: "Building my professional network. Let's connect! 🌐",
+      description: "Connect with DCC! 🌐",
     },
     {
       url: "#",
-      iconSrc: facebookIcon,
-      title: "Facebook",
-      description: "Sharing life's highlights 🌟🤝",
+      iconSrc: logodcc,
+      title: "Official Website",
+      description: " Dream Code Conquer🌟",
     },
     {
-      url: "#",
+      url: "https://www.instagram.com/dccnita/",
       iconSrc: instagramIcon,
       title: "Instagram",
-      description: "Capturing life's frames 📷",
+      description: "Our official insta handle 📷",
     },
     {
-      url: "#",
-      iconSrc: snapchatIcon,
-      title: "Snapchat",
-      description: "Capturing daily moments 📸",
+      url: "https://cphub.dccnita.in/",
+      iconSrc: logodcc,
+      title: "CP Hub",
+      description: "Competitive Programming hub ",
     },
     {
       url: "#",
@@ -65,13 +67,13 @@ const userConfig: UserConfigType = {
       description: "Simple, reliable messaging and calling 🟢",
     },
     {
-      url: "#",
+      url: "https://t.me/+IrV38R0MAd02YmY1",
       iconSrc: telegramIcon,
       title: "Telegram",
       description: "Messaging focusing on speed and security 🚀",
     },
     {
-      url: "#",
+      url: "https://www.youtube.com/@DCCNITA",
       iconSrc: youtubeIcon,
       title: "YouTube",
       description: "Discover, watch, and share your passion 🎥",
@@ -79,8 +81,8 @@ const userConfig: UserConfigType = {
     {
       url: "#",
       iconSrc: mastodonIcon,
-      title: "Mastodon",
-      description: "Sharing without the mainstream noise 🐘",
+      title: "Discord",
+      description: "Connect with DCC on discord",
     },
     {
       url: "#",

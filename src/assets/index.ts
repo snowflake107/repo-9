@@ -12,6 +12,8 @@ import threadsIcon from "./img/threads.webp";
 import whatsappIcon from "./img/whatsapp.webp";
 import youtubeIcon from "./img/youtube.webp";
 import xIcon from "./img/x.webp";
+import logodcc from "./img/logodcc.png";
+import Discord from "./img/Discord.jpeg";
 
 export {
   linkfolioIcon,
@@ -28,4 +30,6 @@ export {
   whatsappIcon,
   youtubeIcon,
   xIcon,
+  logodcc,
+  Discord
 };
