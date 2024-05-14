@@ -9,7 +9,7 @@ const Footer = ({ children }: FooterProps) => {
     <footer className="w-48 mx-auto mt-10 bg-gray-150 text-gray-600 px-6 py-2 text-xs rounded">
       <Link
         className="flex flex-col items-center justify-center"
-        href="https://github.com/heristop/linkfolio"
+        href="https://dccnita.in/"
         target="_blank"
         rel="noreferrer"
       >
