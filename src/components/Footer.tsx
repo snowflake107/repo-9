@@ -32,3 +32,4 @@ const Footer = ({ children }: FooterProps) => {
 };
 
 export default Footer;
+//o
