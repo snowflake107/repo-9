@@ -20,7 +20,7 @@ import {
 const userConfig: UserConfigType = {
   avatarSrc: "/assets/logodcc.png",
   avatarAlt: "Avatar",
-  fullName: "DCC",
+  fullName: "Developers & Coders Club",
   alias: "@dcc",
   metaTitle: "DCCLinks",
   metaDescription: "This website has got all the important links related to Developers & Coders Club 🔗",
