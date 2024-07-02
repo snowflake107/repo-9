@@ -70,16 +70,22 @@ const userConfig: UserConfigType = {
       description: " Dream Code Conquer🌟",
     },
     {
-      url: "bit.ly/dccResources",
+      url: "https://blog.dccnita.in/",
       iconSrc: logodcc,
-      title: "Resources",
-      description: "Link for resources  💙",
+      title: "Blog Website",
+      description: " Dynamic Content Creators🌟",
+    },
+    {
+      url: "https://drive.google.com/drive/folders/1mx3oZ3cW0qLmKIMKYbiWlx5_j7gEC_5G",
+      iconSrc: logodcc,
+      title: "Media Resources",
+      description: "Content Creators use this to show your creativity  💙",
     },
     {
       url: "https://cphub.dccnita.in/",
       iconSrc: logodcc,
       title: "CP Hub",
-      description: "Competitive Programming hub ",
+      description: "Competitive Programming Hub ",
     },
     {
       url: "https://twitter.com/dccnita?t=wa7G9AW_mHU1jYi5Mfml-Q&s=08",
