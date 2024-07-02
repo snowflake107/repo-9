@@ -22,8 +22,8 @@ const userConfig: UserConfigType = {
   avatarAlt: "Avatar",
   fullName: "DCC",
   alias: "@dcc",
-  metaTitle: "LinkFolio",
-  metaDescription: "A hub for all your online links 🔗",
+  metaTitle: "DCCLinks",
+  metaDescription: "This website has got all the important links related to Developers & Coders Club 🔗",
   socialNetworks: [
     {
       url: "https://twitter.com/dccnita?t=wa7G9AW_mHU1jYi5Mfml-Q&s=08",
@@ -85,7 +85,7 @@ const userConfig: UserConfigType = {
       url: "https://cphub.dccnita.in/",
       iconSrc: logodcc,
       title: "CP Hub",
-      description: "Competitive Programming Hub ",
+      description: "Competitive Programming hub ",
     },
     {
       url: "https://twitter.com/dccnita?t=wa7G9AW_mHU1jYi5Mfml-Q&s=08",
