@@ -14,7 +14,7 @@ const Footer = ({ children }: FooterProps) => {
         rel="noreferrer"
       >
         <Image
-          src={linkfolioIcon}
+          src="/assets/logodcc.png"
           title="LinkFolio"
           alt="LinkFolio"
           width={40}
