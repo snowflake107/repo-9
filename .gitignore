@@ -1,0 +1,9 @@
+*.py[co]
+*.sw[po]
+.DS_Store
+.pytest_cache
+.python-version
+build
+dist/
+obs_common.egg-info/
+venv/

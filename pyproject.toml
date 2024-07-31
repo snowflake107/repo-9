@@ -1,6 +1,21 @@
 [project]
 name = "obs-common"
-version = "v2024.07.29"
+description = "code shared between obs-team repositories"
+dynamic = ["version"]
+
+[project.scripts]
+license-check = "obs_common.license_check:main"
+service-status = "obs_common.service_status:main"
+
+[build-system]
+requires = ["setuptools", "setuptools_scm[toml]>=6.2"]
+build-backend = "setuptools.build_meta"
+
+[tool.distutils.bdist_wheel]
+universal = true
+
+[tool.setuptools_scm]
+# Empty is fine
 
 
 [tool.ruff]
