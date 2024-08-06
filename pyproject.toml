@@ -14,6 +14,7 @@ dynamic = ["version"]
 [project.scripts]
 license-check = "obs_common.license_check:main"
 service-status = "obs_common.service_status:main"
+update-obs-common = "obs_common.update_obs_common:main"
 
 [build-system]
 requires = ["setuptools", "setuptools_scm[toml]>=6.2"]
