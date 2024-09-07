@@ -23,7 +23,7 @@ export default function Home() {
   const [showResult, setShowResult] = useState(false);
   const [answer, setAnswer] = useState("");
   const [loading, setLoading] = useState(false);
-  const [chatBoxSettings, setChatBoxSettings] = useState({ report_source: 'web', report_type: 'research_report', tone: 'Objective' });
+  const [chatBoxSettings, setChatBoxSettings] = useState({ report_source: 'web', report_type: 'research_report', tone: 'Objective', lang: 'zh' });
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
   const [question, setQuestion] = useState("");
@@ -93,8 +93,8 @@ export default function Home() {
         };
 
         newSocket.onopen = () => {
-          const { task, report_type, report_source, tone } = chatBoxSettings;
-          let data = "start " + JSON.stringify({ task: promptValue, report_type, report_source, tone, headers });
+          const { task, report_type, report_source, tone , lang } = chatBoxSettings;
+          let data = "start " + JSON.stringify({ task: promptValue, report_type, report_source, tone, lang, headers });
           newSocket.send(data);
 
           // Start sending heartbeat messages every 30 seconds

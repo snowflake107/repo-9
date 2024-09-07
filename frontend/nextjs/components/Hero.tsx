@@ -85,18 +85,23 @@ type suggestionType = {
 
 const suggestions: suggestionType[] = [
   {
+    id: 0,
+    name: "研究报告 ",
+    icon: "/img/paper.svg",
+  },
+  {
     id: 1,
-    name: "Stock analysis on ",
+    name: "股票分析 ",
     icon: "/img/stock2.svg",
   },
   {
     id: 2,
-    name: "Help me plan an adventure to ",
+    name: "请帮我策划一次冒险之旅 ",
     icon: "/img/hiker.svg",
   },
   {
     id: 3,
-    name: "What are the latest news on ",
+    name: "最新的新闻 ",
     icon: "/img/news.svg",
   },
 ];
