@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 
 <head>
-    <title>GPT Researcher</title>
-    <meta name="description" content="A research assistant powered by GPT-4">
+    <title>GPT 研究助手</title>
+    <meta name="description" content="一个由 GPT-4 提供支持的研究助手">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="./static/favicon.ico">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -43,118 +43,96 @@
     <section class="landing">
         <div class="max-w-5xl mx-auto text-center">
             <h1 class="text-4xl font-extrabold mx-auto lg:text-7xl">
-                Say Goodbye to <br>
+                告别 <br>
                 <span
-                    style="background-image:linear-gradient(to right, #9867F0, #ED4E50); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Hours
-                    of Research</span>
+                    style="background-image:linear-gradient(to right, #9867F0, #ED4E50); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">长时间的研究</span>
             </h1>
             <p class="max-w-5xl mx-auto text-gray-600 mt-8" style="font-size:20px">
-                Say Hello to GPT Researcher, your AI mate for rapid insights and comprehensive research. GPT Researcher
-                takes care of everything from accurate source gathering to organization of research results - all in one
-                platform designed to make your research process a breeze.
+                迎接 GPT 研究助手，它是你快速获取见解和全面研究的 AI 伙伴。GPT 研究助手从准确的资源收集到研究结果的组织，一切都在一个平台上完成，让你的研究过程轻松自如。
             </p>
-            <a href="#form" class="btn btn-primary">Get Started</a>
+            <a href="#form" class="btn btn-primary">开始使用</a>
         </div>
     </section>
 
     <main class="container" id="form">
-        <div class="agent-item"><img src="/static/gptr-logo.png" class="avatar" alt="Auto Agent"></div>
+        <div class="agent-item"><img src="/static/gptr-logo.png" class="avatar" alt="自动代理"></div>
         <form method="POST" class="mt-3" onsubmit="GPTResearcher.startResearch(); return false;">
             <div class="form-group">
-                <label for="task" class="agent-question">What would you like me to research next?</label>
+                <label for="task" class="agent-question">你希望我接下来研究什么？</label>
                 <input id="task" name="task" class="form-control" required></input>
-                <input type="radio" name="agent" id="autoAgent" value="Auto Agent" checked hidden>
+                <input type="radio" name="agent" id="autoAgent" value="自动代理" checked hidden>
             </div>
             <div class="form-group">
                 <div class="row">
 
 
                 </div>
-                <button type="button" id="btnShowAuto" class="btn btn-secondary mt-3 btn-show">Auto Agent</button>
+                <button type="button" id="btnShowAuto" class="btn btn-secondary mt-3 btn-show">自动代理</button>
             </div>
             <div class="form-group">
-                <label for="report_type" class="agent-question">What type of report would you like me to
-                    generate?</label>
+                <label for="report_type" class="agent-question">你希望我生成哪种类型的报告？</label>
                 <select name="report_type" class="form-control" required>
-                    <option value="research_report">Summary - Short and fast (~2 min)</option>
-                    <option value="detailed_report">Detailed - In depth and longer (~5 min)</option>
-                    <option value="resource_report">Resource Report</option>
+                    <option value="research_report">总结 - 简短快速（约2分钟）</option>
+                    <option value="detailed_report">详细 - 深入且较长（约5分钟）</option>
+                    <option value="resource_report">资源报告</option>
                 </select>
             </div>
             <div class="form-group">
-                <label for="tone" class="agent-question">In which tone would you like the report to be
-                    generated?</label>
+                <label for="tone" class="agent-question">你希望报告以什么语气生成？</label>
                 <select name="tone" id="tone" class="form-control" required>
-                    <option value="Objective">Objective - Impartial and unbiased presentation of facts and findings
-                    </option>
-                    <option value="Formal">Formal - Adheres to academic standards with sophisticated language and
-                        structure</option>
-                    <option value="Analytical">Analytical - Critical evaluation and detailed examination of data and
-                        theories</option>
-                    <option value="Persuasive">Persuasive - Convincing the audience of a particular viewpoint or
-                        argument</option>
-                    <option value="Informative">Informative - Providing clear and comprehensive information on a topic
-                    </option>
-                    <option value="Explanatory">Explanatory - Clarifying complex concepts and processes</option>
-                    <option value="Descriptive">Descriptive - Detailed depiction of phenomena, experiments, or case
-                        studies</option>
-                    <option value="Critical">Critical - Judging the validity and relevance of the research and its
-                        conclusions</option>
-                    <option value="Comparative">Comparative - Juxtaposing different theories, data, or methods to
-                        highlight differences and similarities</option>
-                    <option value="Speculative">Speculative - Exploring hypotheses and potential implications or future
-                        research directions</option>
-                    <option value="Reflective">Reflective - Considering the research process and personal insights or
-                        experiences</option>
-                    <option value="Narrative">Narrative - Telling a story to illustrate research findings or
-                        methodologies</option>
-                    <option value="Humorous">Humorous - Light-hearted and engaging, usually to make the content more
-                        relatable</option>
-                    <option value="Optimistic">Optimistic - Highlighting positive findings and potential benefits
-                    </option>
-                    <option value="Pessimistic">Pessimistic - Focusing on limitations, challenges, or negative outcomes
-                    </option>
+                    <option value="Objective">客观 - 公正无偏地呈现事实和发现</option>
+                    <option value="Formal">正式 - 遵循学术标准，语言和结构复杂</option>
+                    <option value="Analytical">分析性 - 对数据和理论进行批判性评估和详细审查</option>
+                    <option value="Persuasive">说服性 - 说服观众某个特定观点或论点</option>
+                    <option value="Informative">信息性 - 提供清晰全面的主题信息</option>
+                    <option value="Explanatory">解释性 - 澄清复杂的概念和过程</option>
+                    <option value="Descriptive">描述性 - 详细描述现象、实验或案例研究</option>
+                    <option value="Critical">批判性 - 评判研究的有效性和相关性及其结论</option>
+                    <option value="Comparative">比较性 - 并列不同的理论、数据或方法以突出差异和相似点</option>
+                    <option value="Speculative">推测性 - 探讨假设及其潜在影响或未来研究方向</option>
+                    <option value="Reflective">反思性 - 考虑研究过程和个人见解或经验</option>
+                    <option value="Narrative">叙述性 - 通过讲述故事来说明研究发现或方法</option>
+                    <option value="Humorous">幽默 - 轻松有趣，通常使内容更易理解</option>
+                    <option value="Optimistic">乐观 - 突出积极的发现和潜在的好处</option>
+                    <option value="Pessimistic">悲观 - 关注局限性、挑战或负面结果</option>
                 </select>
             </div>
             <div class="form-group">
-                <label for="report_source" class="agent-question">What sources would you like me to research
-                    from?</label>
-                <p class="text-left mt-0 pt-0" style="font-size: 0.7rem;">You can now do research on local documents as
-                    well. Please make sure to add the DOC_PATH env variable pointing to your documents folder.</p>
+                <label for="report_source" class="agent-question">你希望我从哪些资源中进行研究？</label>
+                <p class="text-left mt-0 pt-0" style="font-size: 0.7rem;">你现在也可以对本地文档进行研究。请确保添加指向文档文件夹的 DOC_PATH 环境变量。</p>
                 <select name="report_source" class="form-control" required>
-                    <option value="web">The Web</option>
-                    <option value="local">My Documents</option>
-                    <option value="hybrid">Hybrid</option>
+                    <option value="web">网络</option>
+                    <option value="local">我的文档</option>
+                    <option value="hybrid">混合</option>
                 </select>
             </div>
-            <input type="submit" value="Research" class="btn btn-primary button-padding">
+            <input type="submit" value="开始研究" class="btn btn-primary button-padding">
         </form>
 
         <div class="margin-div">
-            <h2>Agent Output</h2>
-            <p class="mt-2 text-left" style="font-size: 0.8rem;">An agent tailored specifically to your task
-                will be generated to provide the most precise and relevant research results.</p>
+            <h2>代理输出</h2>
+            <p class="mt-2 text-left" style="font-size: 0.8rem;">一个专门为你的任务定制的代理将被生成，以提供最精确和相关的研究结果。</p>
             <div id="output"></div>
         </div>
         <div class="margin-div">
-            <h2>Research Report</h2>
+            <h2>研究报告</h2>
             <div id="reportContainer"></div>
             <div id="reportActions">
                 <div class="alert alert-info" role="alert" id="status"></div>
                 <a id="copyToClipboard" onclick="GPTResearcher.copyToClipboard()" class="btn btn-secondary mt-3"
-                    style="margin-right: 10px;">Copy to clipboard (markdown)</a>
+                    style="margin-right: 10px;">复制到剪贴板（markdown）</a>
                 <a id="downloadLinkMd" href="#" class="btn btn-secondary mt-3" style="margin-right: 10px;"
-                    target="_blank">Download as Markdown</a>
+                    target="_blank">下载为 Markdown</a>
                 <a id="downloadLink" href="#" class="btn btn-secondary mt-3" style="margin-right: 10px;"
-                    target="_blank">Download as PDF</a>
-                <a id="downloadLinkWord" href="#" class="btn btn-secondary mt-3" target="_blank">Download as Docx</a>
+                    target="_blank">下载为 PDF</a>
+                <a id="downloadLinkWord" href="#" class="btn btn-secondary mt-3" target="_blank">下载为 Docx</a>
             </div>
         </div>
     </main>
 
     <footer>
-        <p>GPT Researcher &copy; 2024 | <a target="_blank" href="https://github.com/assafelovic/gpt-researcher">GitHub
-                Page</a></p>
+        <p>GPT 研究助手 &copy; 2024 | <a target="_blank" href="https://github.com/assafelovic/gpt-researcher">GitHub
+                页面</a></p>
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js"></script>
@@ -192,7 +170,7 @@
             }
         });
 
-</script>
+    </script>
 </body>
 
 </html>
