@@ -1,16 +1,16 @@
 from .utils.views import print_agent_output
 from .utils.llms import call_model
-
-TEMPLATE = """You are an expert research article reviewer. \
-Your goal is to review research drafts and provide feedback to the reviser only based on specific guidelines. \
-"""
+from ..prompts.reviewer_prompts import ReviewerPrompts
+from ..output import Output
 
 
 class ReviewerAgent:
-    def __init__(self, websocket=None, stream_output=None, headers=None):
+    def __init__(self, websocket=None, stream_output=None, lang='zh', headers=None):
         self.websocket = websocket
         self.stream_output = stream_output
+        self.lang = lang
         self.headers = headers or {}
+        self.output = Output(self.lang)
 
     async def review_draft(self, draft_state: dict):
         """
@@ -22,22 +22,12 @@ class ReviewerAgent:
         guidelines = "- ".join(guideline for guideline in task.get("guidelines"))
         revision_notes = draft_state.get("revision_notes")
 
-        revise_prompt = f"""The reviser has already revised the draft based on your previous review notes with the following feedback:
-{revision_notes}\n
-Please provide additional feedback ONLY if critical since the reviser has already made changes based on your previous feedback.
-If you think the article is sufficient or that non critical revisions are required, please aim to return None.
-"""
+        review_prompt = ReviewerPrompts.get_review_prompt(
+            guidelines, draft_state, revision_notes, self.lang)
 
-        review_prompt = f"""You have been tasked with reviewing the draft which was written by a non-expert based on specific guidelines.
-Please accept the draft if it is good enough to publish, or send it for revision, along with your notes to guide the revision.
-If not all of the guideline criteria are met, you should send appropriate revision notes.
-If the draft meets all the guidelines, please return None.
-{revise_prompt if revision_notes else ""}
-
-Guidelines: {guidelines}\nDraft: {draft_state.get("draft")}\n
-"""
         prompt = [
-            {"role": "system", "content": TEMPLATE},
+            {"role": "system",
+                "content": ReviewerPrompts.get_template(self.lang)},
             {"role": "user", "content": review_prompt},
         ]
 
@@ -48,12 +38,13 @@ Guidelines: {guidelines}\nDraft: {draft_state.get("draft")}\n
                 await self.stream_output(
                     "logs",
                     "review_feedback",
-                    f"Review feedback is: {response}...",
+                    self.output.get_output(
+                        'REVIEW_FEEDBACK', response=response),
                     self.websocket,
                 )
             else:
                 print_agent_output(
-                    f"Review feedback is: {response}...", agent="REVIEWER"
+                    self.output.get_output('REVIEW_FEEDBACK', response=response), agent="REVIEWER"
                 )
 
         if "None" in response:
@@ -66,14 +57,15 @@ Guidelines: {guidelines}\nDraft: {draft_state.get("draft")}\n
         to_follow_guidelines = task.get("follow_guidelines")
         review = None
         if to_follow_guidelines:
-            print_agent_output(f"Reviewing draft...", agent="REVIEWER")
+            print_agent_output(self.output.get_output(
+                'REVIEW_DRAFT'), agent="REVIEWER")
 
             if task.get("verbose"):
                 print_agent_output(
-                    f"Following guidelines {guidelines}...", agent="REVIEWER"
+                    self.output.get_output('REVIEW_GUIDELINES', guidelines=guidelines), agent="REVIEWER"
                 )
 
-            review = await self.review_draft(draft_state)
+            review = await self.review_draft(draft_state, self.lang)
         else:
             print_agent_output(f"Ignoring guidelines...", agent="REVIEWER")
         return {"review": review}

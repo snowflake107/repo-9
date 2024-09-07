@@ -9,6 +9,7 @@ from gpt_researcher.utils.enum import ReportType, Tone
 from multi_agents.main import run_research_task
 from gpt_researcher.master.actions import stream_output  # Import stream_output
 
+
 class WebSocketManager:
     """Manage websockets"""
 
@@ -42,7 +43,8 @@ class WebSocketManager:
         await websocket.accept()
         self.active_connections.append(websocket)
         self.message_queues[websocket] = asyncio.Queue()
-        self.sender_tasks[websocket] = asyncio.create_task(self.start_sender(websocket))
+        self.sender_tasks[websocket] = asyncio.create_task(
+            self.start_sender(websocket))
 
     async def disconnect(self, websocket: WebSocket):
         """Disconnect a websocket."""
@@ -53,15 +55,14 @@ class WebSocketManager:
             del self.sender_tasks[websocket]
             del self.message_queues[websocket]
 
-
-    async def start_streaming(self, task, report_type, report_source, source_urls, tone, websocket, headers=None):
+    async def start_streaming(self, task, report_type, report_source, source_urls, tone, lang, websocket, headers=None):
         """Start streaming the output."""
         tone = Tone[tone]
-        report = await run_agent(task, report_type, report_source, source_urls, tone, websocket, headers)
+        report = await run_agent(task, report_type, report_source, source_urls, tone, lang, websocket, headers)
         return report
 
 
-async def run_agent(task, report_type, report_source, source_urls, tone: Tone, websocket, headers=None):
+async def run_agent(task, report_type, report_source, source_urls, tone: Tone, lang, websocket, headers=None):
     """Run the agent."""
     # measure time
     start_time = datetime.datetime.now()
@@ -69,7 +70,7 @@ async def run_agent(task, report_type, report_source, source_urls, tone: Tone, w
     config_path = ""
     # Instead of running the agent directly run it through the different report type classes
     if report_type == "multi_agents":
-        report = await run_research_task(query=task, websocket=websocket, stream_output=stream_output, tone=tone, headers=headers)
+        report = await run_research_task(query=task, websocket=websocket, stream_output=stream_output, tone=tone, lang=lang, headers=headers)
         report = report.get("report", "")
     elif report_type == ReportType.DetailedReport.value:
         researcher = DetailedReport(
@@ -90,6 +91,7 @@ async def run_agent(task, report_type, report_source, source_urls, tone: Tone, w
             report_source=report_source,
             source_urls=source_urls,
             tone=tone,
+            lang=lang,
             config_path=config_path,
             websocket=websocket,
             headers=headers

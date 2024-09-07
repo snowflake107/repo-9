@@ -24,6 +24,7 @@ class ResearchRequest(BaseModel):
     report_type: str
     agent: str
 
+
 class ConfigRequest(BaseModel):
     ANTHROPIC_API_KEY: str
     TAVILY_API_KEY: str
@@ -39,6 +40,7 @@ class ConfigRequest(BaseModel):
     SERPER_API_KEY: str = ''
     SEARX_URL: str = ''
 
+
 app = FastAPI()
 
 app.mount("/site", StaticFiles(directory="./frontend"), name="site")
@@ -49,6 +51,8 @@ templates = Jinja2Templates(directory="./frontend")
 manager = WebSocketManager()
 
 # Dynamic directory for outputs once first research is run
+
+
 @app.on_event("startup")
 def startup_event():
     if not os.path.isdir("outputs"):
@@ -67,18 +71,21 @@ async def read_root(request: Request):
 def sanitize_filename(filename):
     return re.sub(r"[^\w\s-]", "", filename).strip()
 
+
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     await manager.connect(websocket)
     try:
         while True:
             data = await websocket.receive_text()
+            print(f"Received: {data}")
             if data.startswith("start"):
                 json_data = json.loads(data[6:])
                 task = json_data.get("task")
                 report_type = json_data.get("report_type")
                 source_urls = json_data.get("source_urls")
                 tone = json_data.get("tone")
+                lang = json_data.get("lang", "zh")
                 headers = json_data.get("headers", {})
                 filename = f"task_{int(time.time())}_{task}"
                 sanitized_filename = sanitize_filename(
@@ -87,7 +94,7 @@ async def websocket_endpoint(websocket: WebSocket):
                 report_source = json_data.get("report_source")
                 if task and report_type:
                     report = await manager.start_streaming(
-                        task, report_type, report_source, source_urls, tone, websocket, headers
+                        task, report_type, report_source, source_urls, tone, lang, websocket, headers
                     )
                     # Ensure report is a string
                     if not isinstance(report, str):
@@ -111,7 +118,8 @@ async def websocket_endpoint(websocket: WebSocket):
                     )
                 elif data.startswith("human_feedback"):
                     # Handle human feedback
-                    feedback_data = json.loads(data[14:])  # Remove "human_feedback" prefix
+                    # Remove "human_feedback" prefix
+                    feedback_data = json.loads(data[14:])
                     # Process the feedback data as needed
                     # You might want to send this feedback to the appropriate agent or update the research state
                     print(f"Received human feedback: {feedback_data}")
@@ -121,6 +129,7 @@ async def websocket_endpoint(websocket: WebSocket):
     except WebSocketDisconnect:
         await manager.disconnect(websocket)
 
+
 @app.post("/api/multi_agents")
 async def run_multi_agents():
     websocket = manager.active_connections[0] if manager.active_connections else None
@@ -129,6 +138,7 @@ async def run_multi_agents():
         return {"report": report}
     else:
         return JSONResponse(status_code=400, content={"message": "No active WebSocket connection"})
+
 
 @app.get("/getConfig")
 async def get_config(
@@ -158,6 +168,7 @@ async def get_config(
         "EMBEDDING_MODEL": os.getenv("OPENAI_EMBEDDING_MODEL", "")
     }
     return config
+
 
 @app.post("/setConfig")
 async def set_config(config: ConfigRequest):
@@ -211,6 +222,7 @@ async def list_files():
     files = os.listdir(DOC_PATH)
     print(f"Files in {DOC_PATH}: {files}")
     return {"files": files}
+
 
 @app.delete("/files/{filename}")
 async def delete_file(filename: str):

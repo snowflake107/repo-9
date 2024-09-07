@@ -1,12 +1,12 @@
 import os
 import time
 from langgraph.graph import StateGraph, END
-#from langgraph.checkpoint.memory import MemorySaver
+# from langgraph.checkpoint.memory import MemorySaver
 import datetime
 from .utils.views import print_agent_output
 from ..memory.research import ResearchState
 from .utils.utils import sanitize_filename
-
+from ..output import Output
 
 # Import agent classes
 from . import \
@@ -18,23 +18,32 @@ from . import \
 
 
 class ChiefEditorAgent:
-    def __init__(self, task: dict, websocket=None, stream_output=None, tone=None, headers=None):
-        self.task_id = int(time.time()) # Currently time based, but can be any unique identifier
-        self.output_dir = "./outputs/" + sanitize_filename(f"run_{self.task_id}_{task.get('query')[0:40]}")
+    def __init__(self, task: dict, websocket=None, stream_output=None, tone=None, lang='zh', headers=None):
+        # Currently time based, but can be any unique identifier
+        self.task_id = int(time.time())
+        self.output_dir = "./outputs/" + \
+            sanitize_filename(f"run_{self.task_id}_{task.get('query')[0:40]}")
         self.task = task
         self.websocket = websocket
         self.stream_output = stream_output
         self.headers = headers or {}
         self.tone = tone
+        self.lang = lang
         os.makedirs(self.output_dir, exist_ok=True)
+        self.output = Output(self.lang)
 
     def init_research_team(self):
         # Initialize agents
-        writer_agent = WriterAgent(self.websocket, self.stream_output, self.headers)
-        editor_agent = EditorAgent(self.websocket, self.stream_output, self.headers)
-        research_agent = ResearchAgent(self.websocket, self.stream_output, self.tone, self.headers)
-        publisher_agent = PublisherAgent(self.output_dir, self.websocket, self.stream_output, self.headers)
-        human_agent = HumanAgent(self.websocket, self.stream_output, self.headers)
+        writer_agent = WriterAgent(
+            self.websocket, self.stream_output, self.lang, self.headers)
+        editor_agent = EditorAgent(
+            self.websocket, self.stream_output, self.lang, self.headers)
+        research_agent = ResearchAgent(
+            self.websocket, self.stream_output, self.tone, self.lang, self.headers)
+        publisher_agent = PublisherAgent(
+            self.output_dir, self.websocket, self.stream_output, self.lang, self.headers)
+        human_agent = HumanAgent(
+            self.websocket, self.stream_output, self.lang, self.headers)
 
         # Define a Langchain StateGraph with the ResearchState
         workflow = StateGraph(ResearchState)
@@ -67,12 +76,18 @@ class ChiefEditorAgent:
         research_team = self.init_research_team()
 
         # compile the graph
-        #memory = MemorySaver()
+        # memory = MemorySaver()
         chain = research_team.compile()
         if self.websocket and self.stream_output:
-            await self.stream_output("logs", "starting_research", f"Starting the research process for query '{self.task.get('query')}'...", self.websocket)
+            await self.stream_output("logs",
+                                     "starting_research",
+                                     self.output.get_output(
+                                         'STARTING_RESEARCH', query=self.task.get('query')),
+                                     self.websocket
+                                     )
         else:
-            print_agent_output(f"Starting the research process for query '{self.task.get('query')}'...", "MASTER")
+            print_agent_output(self.output.get_output(
+                'STARTING_RESEARCH', query=self.task.get('query')), "MASTER")
 
         config = {
             "configurable": {
@@ -80,7 +95,7 @@ class ChiefEditorAgent:
                 "thread_ts": datetime.datetime.utcnow()
             }
         }
- 
+
         result = await chain.ainvoke({"task": self.task}, config=config)
 
         return result

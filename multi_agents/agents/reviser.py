@@ -13,9 +13,10 @@ sample_revision_notes = """
 
 
 class ReviserAgent:
-    def __init__(self, websocket=None, stream_output=None, headers=None):
+    def __init__(self, websocket=None, stream_output=None, lang='zh', headers=None):
         self.websocket = websocket
         self.stream_output = stream_output
+        self.lang = lang
         self.headers = headers or {}
 
     async def revise_draft(self, draft_state: dict):

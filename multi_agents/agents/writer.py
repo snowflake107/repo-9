@@ -2,32 +2,17 @@ from datetime import datetime
 import json5 as json
 from .utils.views import print_agent_output
 from .utils.llms import call_model
-
-sample_json = """
-{
-  "table_of_contents": A table of contents in markdown syntax (using '-') based on the research headers and subheaders,
-  "introduction": An indepth introduction to the topic in markdown syntax and hyperlink references to relevant sources,
-  "conclusion": A conclusion to the entire research based on all research data in markdown syntax and hyperlink references to relevant sources,
-  "sources": A list with strings of all used source links in the entire research data in markdown syntax and apa citation format. For example: ['-  Title, year, Author [source url](source)', ...]
-}
-"""
+from ..prompts.writer_prompts import WriterPrompts
+from ..output import Output
 
 
 class WriterAgent:
-    def __init__(self, websocket=None, stream_output=None, headers=None):
+    def __init__(self, websocket=None, stream_output=None, lang='zh', headers=None):
         self.websocket = websocket
         self.stream_output = stream_output
+        self.lang = lang
         self.headers = headers
-
-    def get_headers(self, research_state: dict):
-        return {
-            "title": research_state.get("title"),
-            "date": "Date",
-            "introduction": "Introduction",
-            "table_of_contents": "Table of Contents",
-            "conclusion": "Conclusion",
-            "references": "References",
-        }
+        self.output = Output(self.lang)
 
     async def write_sections(self, research_state: dict):
         query = research_state.get("title")
@@ -36,56 +21,22 @@ class WriterAgent:
         follow_guidelines = task.get("follow_guidelines")
         guidelines = task.get("guidelines")
 
-        prompt = [
-            {
-                "role": "system",
-                "content": "You are a research writer. Your sole purpose is to write a well-written "
-                "research reports about a "
-                "topic based on research findings and information.\n ",
-            },
-            {
-                "role": "user",
-                "content": f"Today's date is {datetime.now().strftime('%d/%m/%Y')}\n."
-                f"Query or Topic: {query}\n"
-                f"Research data: {str(data)}\n"
-                f"Your task is to write an in depth, well written and detailed "
-                f"introduction and conclusion to the research report based on the provided research data. "
-                f"Do not include headers in the results.\n"
-                f"You MUST include any relevant sources to the introduction and conclusion as markdown hyperlinks -"
-                f"For example: 'This is a sample text. ([url website](url))'\n\n"
-                f"{f'You must follow the guidelines provided: {guidelines}' if follow_guidelines else ''}\n"
-                f"You MUST return nothing but a JSON in the following format (without json markdown):\n"
-                f"{sample_json}\n\n",
-            },
-        ]
+        prompts = WriterPrompts.get_prompts(
+            self.lang, query, data, task, follow_guidelines, guidelines)
 
         response = await call_model(
-            prompt,
+            prompts,
             task.get("model"),
             response_format="json",
         )
         return response
 
     async def revise_headers(self, task: dict, headers: dict):
-        prompt = [
-            {
-                "role": "system",
-                "content": """You are a research writer. 
-Your sole purpose is to revise the headers data based on the given guidelines.""",
-            },
-            {
-                "role": "user",
-                "content": f"""Your task is to revise the given headers JSON based on the guidelines given.
-You are to follow the guidelines but the values should be in simple strings, ignoring all markdown syntax.
-You must return nothing but a JSON in the same format as given in headers data.
-Guidelines: {task.get("guidelines")}\n
-Headers Data: {headers}\n
-""",
-            },
-        ]
+        prompts = WriterPrompts.get_revise_headers_prompt(
+            self.lang, task, headers)
 
         response = await call_model(
-            prompt,
+            prompts,
             task.get("model"),
             response_format="json",
         )
@@ -96,12 +47,12 @@ Headers Data: {headers}\n
             await self.stream_output(
                 "logs",
                 "writing_report",
-                f"Writing final research report based on research data...",
+                self.output.get_output('WRITING_REPORT'),
                 self.websocket,
             )
         else:
             print_agent_output(
-                f"Writing final research report based on research data...",
+                self.output.get_output('WRITING_REPORT'),
                 agent="WRITER",
             )
 
@@ -121,18 +72,19 @@ Headers Data: {headers}\n
             else:
                 print_agent_output(research_layout_content, agent="WRITER")
 
-        headers = self.get_headers(research_state)
+        headers = WriterPrompts.get_headers(self.lang, research_state)
         if research_state.get("task").get("follow_guidelines"):
             if self.websocket and self.stream_output:
                 await self.stream_output(
                     "logs",
                     "rewriting_layout",
-                    "Rewriting layout based on guidelines...",
+                    self.output.get_output('REWRITING_LAYOUT'),
                     self.websocket,
                 )
             else:
                 print_agent_output(
-                    "Rewriting layout based on guidelines...", agent="WRITER"
+                    self.output.get_output('REWRITING_LAYOUT'),
+                    agent="WRITER"
                 )
             headers = await self.revise_headers(
                 task=research_state.get("task"), headers=headers

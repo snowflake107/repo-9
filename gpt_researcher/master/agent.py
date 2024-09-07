@@ -2,13 +2,14 @@ import asyncio
 import random
 import time
 
-from typing import Set
+from typing import Set, Literal
 
 from gpt_researcher.config import Config
 from gpt_researcher.context.compression import ContextCompressor, WrittenContentCompressor, VectorstoreCompressor
 from gpt_researcher.document import DocumentLoader, LangChainDocumentLoader
 from gpt_researcher.master.actions import *
 from gpt_researcher.memory import Memory
+from gpt_researcher.output import Output
 from gpt_researcher.utils.enum import ReportSource, ReportType, Tone
 
 
@@ -23,6 +24,7 @@ class GPTResearcher:
         report_type: str = ReportType.ResearchReport.value,
         report_source=ReportSource.Web.value,
         tone: Tone = Tone.Objective,
+        lang: Literal['en', 'zh'] = 'zh',
         source_urls=None,
         documents=None,
         vector_store=None,
@@ -45,6 +47,7 @@ class GPTResearcher:
             report_type: str
             source_urls
             tone
+            lang
             config_path
             websocket
             agent
@@ -68,6 +71,7 @@ class GPTResearcher:
         self.context = context
         self.source_urls = source_urls
         self.documents = documents
+        self.lang = lang
         self.vector_store = vector_store
         self.vector_store_filter = vector_store_filter
         self.memory = Memory(self.cfg.embedding_provider, self.headers)
@@ -93,6 +97,8 @@ class GPTResearcher:
         # Stores all the user provided subtopics
         self.subtopics = subtopics
 
+        self.output = Output(self.lang)
+
     async def conduct_research(self):
         """
         Runs the GPT Researcher to conduct research
@@ -106,7 +112,7 @@ class GPTResearcher:
             await stream_output(
                 "logs",
                 "starting_research",
-                f"🔎 Starting the research task for '{self.query}'...",
+                self.output.get_output('STARTING_RESEARCH', query=self.query),
                 self.websocket,
             )
 
@@ -136,7 +142,8 @@ class GPTResearcher:
             document_data = await DocumentLoader(self.cfg.doc_path).load()
             docs_context = await self.__get_context_by_search(self.query, document_data)
             web_context = await self.__get_context_by_search(self.query)
-            self.context = f"Context from local documents: {docs_context}\n\nContext from web sources: {web_context}"
+            self.context = self.output.get_output(
+                'CONTEXT', docs_context=docs_context, web_context=web_context)
 
         elif self.report_source == ReportSource.LangChainDocuments.value:
             langchain_documents_data = await LangChainDocumentLoader(
@@ -157,7 +164,7 @@ class GPTResearcher:
             await stream_output(
                 "logs",
                 "research_step_finalized",
-                f"Finalized research step.\n💸 Total Research Costs: ${self.get_costs()}",
+                self.output.get_output('RESEARCH_STEP_FINALIZED', costs=self.get_costs()),
                 self.websocket,
             )
 
@@ -176,7 +183,7 @@ class GPTResearcher:
             await stream_output(
                 "logs",
                 "task_summary_coming_up",
-                f"✍️ Writing summary for research task: {self.query} (this may take a few minutes)...",
+                self.output.get_output('TASK_SUMMARY_COMING_UP', query=self.query),
                 self.websocket,
             )
 
@@ -189,6 +196,7 @@ class GPTResearcher:
                 report_type=self.report_type,
                 report_source=self.report_source,
                 tone=self.tone,
+                lang=self.lang,
                 websocket=self.websocket,
                 cfg=self.cfg,
                 headers=self.headers,
@@ -202,6 +210,7 @@ class GPTResearcher:
                 report_source=self.report_source,
                 websocket=self.websocket,
                 tone=self.tone,
+                lang=self.lang,
                 cfg=self.cfg,
                 main_topic=self.parent_query,
                 existing_headers=existing_headers,
@@ -217,6 +226,7 @@ class GPTResearcher:
                 report_type=self.report_type,
                 report_source=self.report_source,
                 tone=self.tone,
+                lang=self.lang,
                 websocket=self.websocket,
                 cfg=self.cfg,
                 cost_callback=self.add_costs,
@@ -234,7 +244,7 @@ class GPTResearcher:
             await stream_output(
                 "logs",
                 "source_urls",
-                f"🗂️ I will conduct my research based on the following urls: {new_search_urls}...",
+                self.output.get_output('SOURCE_URLS', new_search_urls=new_search_urls),
                 self.websocket,
             )
 
@@ -258,7 +268,7 @@ class GPTResearcher:
             await stream_output(
                 "logs",
                 "subqueries",
-                f"🗂️  I will conduct my research based on the following queries: {sub_queries}...",
+                self.output.get_output('SUBQUERIES', sub_queries=sub_queries),
                 self.websocket,
                 True,
                 sub_queries,
@@ -290,7 +300,7 @@ class GPTResearcher:
             await stream_output(
                 "logs",
                 "subqueries",
-                f"🗂️ I will conduct my research based on the following queries: {sub_queries}...",
+                self.output.get_output('SUBQUERIES', sub_queries=sub_queries),
                 self.websocket,
                 True,
                 sub_queries,
@@ -318,7 +328,8 @@ class GPTResearcher:
             await stream_output(
                 "logs",
                 "running_subquery_with_vectorstore_research",
-                f"\n🔍 Running research for '{sub_query}'...",
+                self.output.get_output(
+                    'RUNNING_SUBQUERY_WITH_VECTORSTORE_RESEARCH', sub_query=sub_query),
                 self.websocket,
             )
 
@@ -332,7 +343,7 @@ class GPTResearcher:
             await stream_output(
                 "logs",
                 "subquery_context_not_found",
-                f"🤷 No content found for '{sub_query}'...",
+                self.output.get_output('SUBQUERY_CONTEXT_NOT_FOUND', sub_query=sub_query),
                 self.websocket,
             )
         return content
@@ -351,7 +362,7 @@ class GPTResearcher:
             await stream_output(
                 "logs",
                 "running_subquery_research",
-                f"\n🔍 Running research for '{sub_query}'...",
+                self.output.get_output('RUNNING_SUBQUERY_RESEARCH', sub_query=sub_query),
                 self.websocket,
             )
 
@@ -368,7 +379,7 @@ class GPTResearcher:
             await stream_output(
                 "logs",
                 "subquery_context_not_found",
-                f"🤷 No content found for '{sub_query}'...",
+                self.output.get_output('SUBQUERY_CONTEXT_NOT_FOUND', sub_query=sub_query),
                 self.websocket,
             )
         return content
@@ -388,7 +399,7 @@ class GPTResearcher:
                     await stream_output(
                         "logs",
                         "added_source_url",
-                        f"✅ Added source url to research: {url}\n",
+                        self.output.get_output('ADDED_SOURCE_URL', url=url),
                         self.websocket,
                         True,
                         url,
@@ -431,7 +442,7 @@ class GPTResearcher:
             await stream_output(
                 "logs",
                 "researching",
-                f"🤔 Researching for relevant information across multiple sources...\n",
+                self.output.get_output('RESEARCHING'),
                 self.websocket,
             )
 
@@ -447,12 +458,13 @@ class GPTResearcher:
             await stream_output(
                 "logs",
                 "fetching_query_content",
-                f"📚 Getting relevant content based on query: {query}...",
+                self.output.get_output('FETCHING_QUERY_CONTENT', query=query),
                 self.websocket,
-            )  
+            )
 
         # Summarize data fetched from vector store
-        vectorstore_compressor = VectorstoreCompressor(self.vector_store, filter)
+        vectorstore_compressor = VectorstoreCompressor(
+            self.vector_store, filter)
 
         return await vectorstore_compressor.async_get_context(
             query=query, max_results=8
@@ -463,7 +475,7 @@ class GPTResearcher:
             await stream_output(
                 "logs",
                 "fetching_query_content",
-                f"📚 Getting relevant content based on query: {query}...",
+                self.output.get_output('FETCHING_QUERY_CONTENT', query=query),
                 self.websocket,
             )
 
@@ -525,7 +537,7 @@ class GPTResearcher:
             await stream_output(
                 "logs",
                 "generating_subtopics",
-                f"🤔 Generating subtopics...",
+                self.output.get_output('GENERATING_SUBTOPICS'),
                 self.websocket,
             )
 
@@ -539,7 +551,9 @@ class GPTResearcher:
 
         if self.verbose:
             await stream_output(
-                "logs", "subtopics", f"📋Subtopics: {subtopics}", self.websocket
+                "logs", "subtopics",
+                self.output.get_output('SUBTOPICS', subtopics=subtopics),
+                self.websocket
             )
 
         return subtopics
@@ -555,7 +569,7 @@ class GPTResearcher:
             await stream_output(
                 "logs",
                 "task_summary_coming_up",
-                f"✍️ Writing draft section titles for research task: {self.query}...",
+                self.output.get_output('TASK_SUMMARY_COMING_UP', query=self.query),
                 self.websocket,
             )
 
@@ -572,13 +586,13 @@ class GPTResearcher:
         )
 
         return draft_section_titles
-    
+
     async def __get_similar_written_contents_by_query(self,
-            query: str,
-            written_contents: List[Dict],
-            similarity_threshold: float = 0.5,
-            max_results: int = 10
-        ) -> List[str]:
+                                                      query: str,
+                                                      written_contents: List[Dict],
+                                                      similarity_threshold: float = 0.5,
+                                                      max_results: int = 10
+                                                      ) -> List[str]:
         """
         Asynchronously retrieves similar written contents based on a given query.
 
@@ -596,7 +610,7 @@ class GPTResearcher:
             await stream_output(
                 "logs",
                 "fetching_relevant_written_content",
-                f"🔎 Getting relevant written content based on query: {query}...",
+                self.output.get_output('FETCHING_RELEVANT_WRITTEN_CONTENT', query=query),
                 self.websocket,
             )
 
@@ -619,34 +633,34 @@ class GPTResearcher:
             report_type=self.report_type,
             cost_callback=self.add_costs,
         )
-    
+
     async def get_similar_written_contents_by_draft_section_titles(
-        self, 
-        current_subtopic: str, 
+        self,
+        current_subtopic: str,
         draft_section_titles: List[str],
         written_contents: List[Dict],
         max_results: int = 10
     ) -> List[str]:
         """
         Retrieve similar written contents based on current subtopic and draft section titles.
-        
+
         Args:
         current_subtopic (str): The current subtopic.
         draft_section_titles (List[str]): List of draft section titles.
         written_contents (List[Dict]): List of written contents to search through.
         max_results (int): Maximum number of results to return. Defaults to 10.
-        
+
         Returns:
         List[str]: List of relevant written contents.
         """
         all_queries = [current_subtopic] + draft_section_titles
-        
+
         async def process_query(query: str) -> Set[str]:
             return set(await self.__get_similar_written_contents_by_query(query, written_contents))
 
         # Run all queries in parallel
         results = await asyncio.gather(*[process_query(query) for query in all_queries])
-        
+
         # Combine all results
         relevant_contents = set().union(*results)
 

@@ -7,15 +7,18 @@ import json
 
 from ..memory.draft import DraftState
 from . import ResearchAgent, ReviewerAgent, ReviserAgent
+from ..prompts.editor_prompts import EditorPrompts
+from ..output import Output
 
 
 class EditorAgent:
-    def __init__(self, websocket=None, stream_output=None, headers=None):
+    def __init__(self, websocket=None, stream_output=None, lang='zh', headers=None):
         self.websocket = websocket
         self.stream_output = stream_output
         self.headers = headers or {}
+        self.output = Output(self.lang)
 
-    async def plan_research(self, research_state: dict):
+    async def plan_research(self, research_state: dict, lang="zh"):
         """
         Curate relevant sources for a query
         :param summary_report:
@@ -26,36 +29,14 @@ class EditorAgent:
 
         initial_research = research_state.get("initial_research")
         task = research_state.get("task")
-        include_human_feedback = task.get("include_human_feedback")
         human_feedback = research_state.get("human_feedback")
-        max_sections = task.get("max_sections")
 
-        prompt = [
-            {
-                "role": "system",
-                "content": "You are a research editor. Your goal is to oversee the research project"
-                " from inception to completion. Your main task is to plan the article section "
-                "layout based on an initial research summary.\n ",
-            },
-            {
-                "role": "user",
-                "content": f"""Today's date is {datetime.now().strftime('%d/%m/%Y')}
-                                  Research summary report: '{initial_research}'
-                                  {f'Human feedback: {human_feedback}. You must plan the sections based on the human feedback.'
-            if include_human_feedback and human_feedback and human_feedback != 'no' else ''}
-                                  \nYour task is to generate an outline of sections headers for the research project
-                                  based on the research summary report above.
-                                  You must generate a maximum of {max_sections} section headers.
-                                  You must focus ONLY on related research topics for subheaders and do NOT include introduction, conclusion and references.
-                                  You must return nothing but a JSON with the fields 'title' (str) and 
-                                  'sections' (maximum {max_sections} section headers) with the following structure:
-                                  '{{title: string research title, date: today's date, 
-                                  sections: ['section header 1', 'section header 2', 'section header 3' ...]}}.""",
-            },
-        ]
+        prompt = EditorPrompts.get_plan_research_prompt(
+            initial_research, task, human_feedback, lang)
 
         print_agent_output(
-            f"Planning an outline layout based on initial research...", agent="EDITOR"
+            self.output.get_output('EDITOR_AGENT_PLANNING'),
+            agent="EDITOR"
         )
         plan = await call_model(
             prompt=prompt,
@@ -70,9 +51,12 @@ class EditorAgent:
         }
 
     async def run_parallel_research(self, research_state: dict):
-        research_agent = ResearchAgent(self.websocket, self.stream_output, self.headers)
-        reviewer_agent = ReviewerAgent(self.websocket, self.stream_output, self.headers)
-        reviser_agent = ReviserAgent(self.websocket, self.stream_output, self.headers)
+        research_agent = ResearchAgent(
+            self.websocket, self.stream_output, self.lang, self.headers)
+        reviewer_agent = ReviewerAgent(
+            self.websocket, self.stream_output, self.lang, self.headers)
+        reviser_agent = ReviserAgent(
+            self.websocket, self.stream_output, self.lang, self.headers)
         queries = research_state.get("sections")
         title = research_state.get("title")
         human_feedback = research_state.get("human_feedback")
@@ -99,12 +83,13 @@ class EditorAgent:
             await self.stream_output(
                 "logs",
                 "parallel_research",
-                f"Running parallel research for the following queries: {queries}",
+                self.output.get_output('PARALLEL_RESEARCH', queries=queries),
                 self.websocket,
             )
         else:
             print_agent_output(
-                f"Running the following research tasks in parallel: {queries}...",
+                self.output.get_output(
+                    'EDITOR_AGENT_RUNNING', queries=queries),
                 agent="EDITOR",
             )
 
@@ -112,7 +97,8 @@ class EditorAgent:
             chain.ainvoke(
                 {
                     "task": research_state.get("task"),
-                    "topic": query,  # + (f". Also: {human_feedback}" if human_feedback is not None else ""),
+                    # + (f". Also: {human_feedback}" if human_feedback is not None else ""),
+                    "topic": query,
                     "title": title,
                     "headers": self.headers,
                 }

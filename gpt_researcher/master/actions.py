@@ -1,7 +1,7 @@
 import asyncio
 import json
 import re
-from typing import Dict, List
+from typing import Dict, List, Literal
 
 import json_repair
 import markdown
@@ -391,6 +391,7 @@ async def generate_report(
     agent_role_prompt: str,
     report_type: str,
     tone: Tone,
+    lang: Literal['en', 'zh'],
     report_source: str,
     websocket,
     cfg,
@@ -419,7 +420,7 @@ async def generate_report(
         report:
 
     """
-    generate_prompt = get_prompt_by_report_type(report_type)
+    generate_prompt = get_prompt_by_report_type(report_type, lang)
     report = ""
 
     if report_type == "subtopic_report":

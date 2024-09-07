@@ -1,7 +1,9 @@
 from fastapi import WebSocket
 
+from typing import Literal
 from gpt_researcher.master.agent import GPTResearcher
 from gpt_researcher.utils.enum import Tone
+
 
 class BasicReport:
     def __init__(
@@ -11,6 +13,7 @@ class BasicReport:
         report_source: str,
         source_urls,
         tone: Tone,
+        lang: Literal['en', 'zh'],
         config_path: str,
         websocket: WebSocket,
         headers=None
@@ -20,6 +23,7 @@ class BasicReport:
         self.report_source = report_source
         self.source_urls = source_urls
         self.tone = tone
+        self.lang = lang
         self.config_path = config_path
         self.websocket = websocket
         self.headers = headers or {}
@@ -32,6 +36,7 @@ class BasicReport:
             report_source=self.report_source,
             source_urls=self.source_urls,
             tone=self.tone,
+            lang=self.lang,
             config_path=self.config_path,
             websocket=self.websocket,
             headers=self.headers

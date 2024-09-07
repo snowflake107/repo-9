@@ -1,11 +1,14 @@
 import json
+from ..output import Output
 
 
 class HumanAgent:
-    def __init__(self, websocket=None, stream_output=None, headers=None):
+    def __init__(self, websocket=None, stream_output=None, lang='zh', headers=None):
         self.websocket = websocket
         self.stream_output = stream_output
+        self.lang = lang
         self.headers = headers or {}
+        self.output = Output(self.lang)
 
     async def review_plan(self, research_state: dict):
         print(f"HumanAgent websocket: {self.websocket}")
@@ -22,7 +25,8 @@ class HumanAgent:
                     await self.stream_output(
                         "human_feedback",
                         "request",
-                        f"Any feedback on this plan of topics to research? {layout}? If not, please reply with 'no'.",
+                        self.output.get_output(
+                            'HUMAN_FEEDBACK_REQUEST', layout=layout),
                         self.websocket,
                     )
                     response = await self.websocket.receive_text()
@@ -40,7 +44,8 @@ class HumanAgent:
             # Otherwise, prompt the user for feedback in the console
             else:
                 user_feedback = input(
-                    f"Any feedback on this plan? {layout}? If not, please reply with 'no'.\n>> "
+                    self.output.get_output(
+                        'HUMAN_FEEDBACK_REQUEST', layout=layout)
                 )
 
         if user_feedback and "no" in user_feedback.strip().lower():

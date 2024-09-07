@@ -72,6 +72,7 @@ const GPTResearcher = (() => {
         report_source: report_source,
         source_urls: source_urls,
         tone: tone,
+        lang: 'zh',
         agent: agent,
       }
 
