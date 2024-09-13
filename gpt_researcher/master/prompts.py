@@ -32,16 +32,19 @@ def generate_search_queries_prompt(
 
     if lang == 'zh':
         return (
-            f'为以下任务生成 {max_iterations} 个谷歌搜索查询，以便在线搜索形成客观意见: "{task}"'
-            f'你必须以字符串列表的形式回应，例如：["查询1", "查询2", "查询3"]。\n'
-            f"回应中只能包含列表。"
+        f'写出 {max_iterations} 个谷歌搜索查询，以便在线搜索并从以下任务中形成客观意见: "{task}"\n'
+        f'如果需要，请假设当前日期为 {datetime.now(timezone.utc).strftime('%Y年%m月%d日')}。\n'
+        f'你必须以如下格式回复一个字符串列表: ["查询 1", "查询 2", "查询 3"]。\n'
+        f'回复中应仅包含该列表。'
+
         )
     else:
         return (
-            f'Write {max_iterations} google search queries to search online that form an objective opinion from the following task: "{task}"'
+            f'Write {max_iterations} google search queries to search online that form an objective opinion from the following task: "{task}"\n'
+            f'Assume the current date is {datetime.now(timezone.utc).strftime('%B %d, %Y')} if required.\n'
             f'You must respond with a list of strings in the following format: ["query 1", "query 2", "query 3"].\n'
             f"The response should contain ONLY the list."
-        )
+    )
 
 
 def generate_report_prompt(
