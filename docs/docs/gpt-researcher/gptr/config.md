@@ -18,7 +18,7 @@ You can also include your own external JSON file `config.json` by adding the pat
 
 Below is a list of current supported options:
 
-- **`RETRIEVER`**: Web search engine used for retrieving sources. Defaults to `tavily`. Options: `duckduckgo`, `bing`, `google`, `serper`, `searx`. [Check here](https://github.com/assafelovic/gpt-researcher/tree/master/gpt_researcher/retrievers) for supported retrievers
+- **`RETRIEVER`**: Web search engine used for retrieving sources. Defaults to `tavily`. Options: `duckduckgo`, `bing`, `google`, `searchapi`, `serper`, `searx`. [Check here](https://github.com/assafelovic/gpt-researcher/tree/master/gpt_researcher/retrievers) for supported retrievers
 - **`EMBEDDING_PROVIDER`**: Provider for embedding model. Defaults to `openai`. Options: `ollama`, `huggingface`, `azure_openai`, `custom`.
 - **`LLM_PROVIDER`**: LLM provider. Defaults to `openai`. Options: `google`, `ollama`, `groq` and much more!
 - **`FAST_LLM_MODEL`**: Model name for fast LLM operations such summaries. Defaults to `gpt-4o-mini`.
@@ -46,7 +46,7 @@ export RETRIEVER=bing
 export REPORT_FORMAT=IEEE
 ```
 Please note that you might need to export additional env vars and obtain API keys for other supported search retrievers and LLM providers. Please follow your console logs for further assistance.
-To learn more about additional LLM support you can check out the docs [here](/docs/gpt-researcher/llms).
+To learn more about additional LLM support you can check out the docs [here](/docs/gpt-researcher/llms/llms).
 
 You can also include your own external JSON file `config.json` by adding the path in the `config_file` param.
 

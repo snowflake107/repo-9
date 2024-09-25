@@ -135,6 +135,7 @@ class GPTResearcher:
             self.context = await self.__get_context_by_urls(self.source_urls)
 
         elif self.report_source == ReportSource.Local.value:
+            logger.info(f"Loading documents from {self.cfg.doc_path}")
             document_data = await DocumentLoader(self.cfg.doc_path).load()
             self.context = await self.__get_context_by_search(self.query, document_data)
 
@@ -473,7 +474,7 @@ class GPTResearcher:
         )
         # Run Tasks
         return await context_compressor.async_get_context(
-            query=query, max_results=8, cost_callback=self.add_costs
+            query=query, max_results=10, cost_callback=self.add_costs
         )
 
     ########################################################################################
