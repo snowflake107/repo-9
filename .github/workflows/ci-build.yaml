@@ -1113,7 +1113,7 @@ jobs:
       uses: actions/checkout@8410ad0602e1e429cee44a835ae9f77f654a6694
     - continue-on-error: true
       id: filter
-      uses: tj-actions/changed-files@90a06d6ba9543371ab4df8eeca0be07ca6054959
+      uses: tj-actions/changed-files@c3a1bb2c992d77180ae65be6ae6c166cf40f857c
       with:
         files_yaml: "backend:\n  - '!ui/**'\n  - '!**.md'            \n  - '!**/*.md'\n\
           \  - '!docs/**'\nfrontend:\n  - 'ui/**'\n  - Dockerfile\ndocs:\n  - 'docs/**'\n"
