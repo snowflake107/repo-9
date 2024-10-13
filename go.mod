@@ -33,7 +33,7 @@ require (
 	github.com/amir/raidman v0.0.0-20170415203553-1ccc43bfb9c9
 	github.com/antchfx/jsonquery v1.3.3
 	github.com/antchfx/xmlquery v1.3.18
-	github.com/antchfx/xpath v1.2.5
+	github.com/antchfx/xpath v1.3.2
 	github.com/apache/arrow/go/v13 v13.0.0
 	github.com/apache/iotdb-client-go v0.12.2-0.20220722111104-cd17da295b46
 	github.com/apache/thrift v0.18.1
