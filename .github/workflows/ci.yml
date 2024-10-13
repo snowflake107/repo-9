@@ -256,7 +256,7 @@ jobs:
     - continue-on-error: true
       id: go
       name: Set up Go 1.x
-      uses: actions/setup-go@v4
+      uses: actions/setup-go@v5
       with:
         go-version: ${{ env.GO_VERSION }}
     - continue-on-error: true
@@ -522,7 +522,7 @@ jobs:
     - continue-on-error: true
       id: go
       name: Set up Go 1.x
-      uses: actions/setup-go@v4
+      uses: actions/setup-go@v5
       with:
         go-version: ${{ env.GO_VERSION }}
     - continue-on-error: true
@@ -788,7 +788,7 @@ jobs:
     - continue-on-error: true
       id: go
       name: Set up Go 1.x
-      uses: actions/setup-go@v4
+      uses: actions/setup-go@v5
       with:
         go-version: ${{ env.GO_VERSION }}
     - continue-on-error: true
@@ -1054,7 +1054,7 @@ jobs:
     - continue-on-error: true
       id: go
       name: Set up Go 1.x
-      uses: actions/setup-go@v4
+      uses: actions/setup-go@v5
       with:
         go-version: ${{ env.GO_VERSION }}
     - continue-on-error: true
@@ -1583,7 +1583,7 @@ jobs:
     - continue-on-error: true
       id: go
       name: Set up Go 1.x
-      uses: actions/setup-go@v4
+      uses: actions/setup-go@v5
       with:
         go-version: ${{ env.GO_VERSION }}
     - continue-on-error: true
@@ -1849,7 +1849,7 @@ jobs:
     - continue-on-error: true
       id: go
       name: Set up Go 1.x
-      uses: actions/setup-go@v4
+      uses: actions/setup-go@v5
       with:
         go-version: ${{ env.GO_VERSION }}
     - continue-on-error: true
@@ -2115,7 +2115,7 @@ jobs:
     - continue-on-error: true
       id: go
       name: Set up Go 1.x
-      uses: actions/setup-go@v4
+      uses: actions/setup-go@v5
       with:
         go-version: ${{ env.GO_VERSION }}
     - continue-on-error: true
@@ -2381,7 +2381,7 @@ jobs:
     - continue-on-error: true
       id: go
       name: Set up Go 1.x
-      uses: actions/setup-go@v4
+      uses: actions/setup-go@v5
       with:
         go-version: ${{ env.GO_VERSION }}
     - continue-on-error: true
