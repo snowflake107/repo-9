@@ -191,7 +191,7 @@ require (
 	github.com/wavefronthq/wavefront-sdk-go v0.15.0
 	github.com/x448/float16 v0.8.4
 	github.com/xdg/scram v1.0.5
-	github.com/yuin/goldmark v1.6.0
+	github.com/yuin/goldmark v1.7.6
 	go.mongodb.org/mongo-driver v1.14.0
 	go.opentelemetry.io/collector/pdata v1.1.0
 	go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetricgrpc v0.44.0
