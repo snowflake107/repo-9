@@ -51,7 +51,7 @@
 		"tree-sitter-toml": "^0.5.1",
 		"tree-sitter-typescript": "^0.20.5",
 		"ts-node": "^10.9.2",
-		"typescript": "5.4.2"
+		"typescript": "5.6.3"
 	},
 	"files": ["/out"],
 	"packageManager": "pnpm@8.10.5",
