@@ -1,3 +1,6 @@
+// Copyright © 2024 Ory Corp
+// SPDX-License-Identifier: Apache-2.0
+
 package archive // import "github.com/ory/dockertest/v3/docker/pkg/archive"
 
 import (
@@ -5,7 +8,6 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"sort"
@@ -344,12 +346,12 @@ func ChangesDirs(newDir, oldDir string) ([]Change, error) {
 		oldRoot, newRoot *FileInfo
 	)
 	if oldDir == "" {
-		emptyDir, err := ioutil.TempDir("", "empty")
+		emptyDir, err := os.CreateTemp("", "empty")
 		if err != nil {
 			return nil, err
 		}
-		defer os.Remove(emptyDir)
-		oldDir = emptyDir
+		defer os.Remove(emptyDir.Name())
+		oldDir = emptyDir.Name()
 	}
 	oldRoot, newRoot, err := collectFileInfoForChanges(oldDir, newDir)
 	if err != nil {

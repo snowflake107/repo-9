@@ -1,3 +1,6 @@
+// Copyright © 2024 Ory Corp
+// SPDX-License-Identifier: Apache-2.0
+
 // Copyright 2014 go-dockerclient authors. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
@@ -38,7 +41,7 @@ func tlsDialWithDialer(dialer *net.Dialer, network, addr string, config *tls.Con
 	timeout := dialer.Timeout
 
 	if !dialer.Deadline.IsZero() {
-		deadlineTimeout := dialer.Deadline.Sub(time.Now())
+		deadlineTimeout := time.Until(dialer.Deadline)
 		if timeout == 0 || deadlineTimeout < timeout {
 			timeout = deadlineTimeout
 		}
@@ -109,10 +112,10 @@ func copyTLSConfig(cfg *tls.Config) *tls.Config {
 		NameToCertificate:        cfg.NameToCertificate,
 		NextProtos:               cfg.NextProtos,
 		PreferServerCipherSuites: cfg.PreferServerCipherSuites,
-		Rand:                   cfg.Rand,
-		RootCAs:                cfg.RootCAs,
-		ServerName:             cfg.ServerName,
-		SessionTicketKey:       cfg.SessionTicketKey,
-		SessionTicketsDisabled: cfg.SessionTicketsDisabled,
+		Rand:                     cfg.Rand,
+		RootCAs:                  cfg.RootCAs,
+		ServerName:               cfg.ServerName,
+		SessionTicketKey:         cfg.SessionTicketKey,
+		SessionTicketsDisabled:   cfg.SessionTicketsDisabled,
 	}
 }

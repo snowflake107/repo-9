@@ -1,7 +1,11 @@
+// Copyright © 2024 Ory Corp
+// SPDX-License-Identifier: Apache-2.0
+
 // Copyright 2016 go-dockerclient authors. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+//go:build !windows
 // +build !windows
 
 package docker
@@ -22,9 +26,6 @@ func (c *Client) initializeNativeClient(trFunc func() *http.Transport) {
 
 	tr := trFunc()
 
-	tr.Dial = func(network, addr string) (net.Conn, error) {
-		return c.Dialer.Dial(unixProtocol, sockPath)
-	}
 	tr.DialContext = func(ctx context.Context, network, addr string) (net.Conn, error) {
 		return c.Dialer.Dial(unixProtocol, sockPath)
 	}

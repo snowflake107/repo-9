@@ -1,3 +1,6 @@
+// Copyright © 2024 Ory Corp
+// SPDX-License-Identifier: Apache-2.0
+
 package jsonmessage // import "github.com/ory/dockertest/v3/docker/pkg/jsonmessage"
 
 import (
@@ -215,7 +218,7 @@ func (jm *JSONMessage) Display(out io.Writer, termInfo termInfo) error {
 	if termInfo != nil && jm.Stream == "" && jm.Progress != nil {
 		clearLine(out, termInfo)
 		endl = "\r"
-		fmt.Fprintf(out, endl)
+		fmt.Fprint(out, endl)
 	} else if jm.Progress != nil && jm.Progress.String() != "" { //disable progressbar in non-terminal
 		return nil
 	}
