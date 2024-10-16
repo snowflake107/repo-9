@@ -30,4 +30,4 @@ serde_json = { version = "1.0", default-features = false, features = ["alloc"] }
 
 [build-dependencies]
 informalsystems-pbjson-build = { path = "../pbjson-build", version = "0.7.0" }
-prost-build = "0.12"
+prost-build = "0.13"
