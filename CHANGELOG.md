@@ -1,3 +1,37 @@
+# 1.3.0 (2024-10-16)
+
+
+### Bug Fixes
+
+* add part with tag name by default ([567a822](https://github.com/muxinc/custom-media-element/commit/567a822f00ec9b5819a9fbc434fb1a3da7e90002))
+* add type alias, easier on consumers ([#17](https://github.com/muxinc/custom-media-element/issues/17)) ([076dbfc](https://github.com/muxinc/custom-media-element/commit/076dbfc25aad177d005799b054a8aac8c539df1f))
+* custom built-in observedAttributes bug ([a485ec4](https://github.com/muxinc/custom-media-element/commit/a485ec4e5166085662731e208a9950bd9440fbaf))
+* enable default chapters & metadata track ([#18](https://github.com/muxinc/custom-media-element/issues/18)) ([a8aaca5](https://github.com/muxinc/custom-media-element/commit/a8aaca52b19f7ba02946fc2c458a03b16e9ed0ca))
+* Events override, type and SSR issues ([03c3cde](https://github.com/muxinc/custom-media-element/commit/03c3cde38b6fac56012bcf694aeb462ced79a298))
+* export Events ([a583775](https://github.com/muxinc/custom-media-element/commit/a583775b97545acbade104d801d9adfb71673581))
+* export template, fix types ([f028167](https://github.com/muxinc/custom-media-element/commit/f028167bae3a1cfef4352320a57a3d61b8019517))
+* improve types ([#14](https://github.com/muxinc/custom-media-element/issues/14)) ([03f3e9d](https://github.com/muxinc/custom-media-element/commit/03f3e9de1665142fd87bbe772630f028ee7d6f97))
+* muted issue ([f7d5efd](https://github.com/muxinc/custom-media-element/commit/f7d5efd323d417af2a72cde98737026b1f9cebd6))
+* native preload value bug ([d327cf3](https://github.com/muxinc/custom-media-element/commit/d327cf3584f1d49dbdec0d1d45bac7573345a70b))
+* prevent setting child attrs on native el ([#13](https://github.com/muxinc/custom-media-element/issues/13)) ([34dd674](https://github.com/muxinc/custom-media-element/commit/34dd674459259d870975d998e324354a240eea44))
+* prevent setting the same attribute values ([#6](https://github.com/muxinc/custom-media-element/issues/6)) ([dc0fb30](https://github.com/muxinc/custom-media-element/commit/dc0fb30b995af324dc0e9579fde8139bc79e1f4a))
+* remove default preload value ([16448b4](https://github.com/muxinc/custom-media-element/commit/16448b4d2c1bd0189008be38a3acc73ded32340f))
+* simplify cd script ([#5](https://github.com/muxinc/custom-media-element/issues/5)) ([f15eacf](https://github.com/muxinc/custom-media-element/commit/f15eacfc0c2856e88015566a534294230410e110))
+* sizing inconsistent compared to native video ([#7](https://github.com/muxinc/custom-media-element/issues/7)) ([0adc51a](https://github.com/muxinc/custom-media-element/commit/0adc51a841ed54a2c1dae16bf497f9e290d6aa3a))
+* slotted media querySelector ([#12](https://github.com/muxinc/custom-media-element/issues/12)) ([0c56715](https://github.com/muxinc/custom-media-element/commit/0c56715c596e9a91cddb53ed0cdd72577677d16a))
+* types ([fa0ff1e](https://github.com/muxinc/custom-media-element/commit/fa0ff1e807bed9de948b8084c98a0313f5abc5c4))
+* upgrade deps + improve types ([#16](https://github.com/muxinc/custom-media-element/issues/16)) ([2ffa12d](https://github.com/muxinc/custom-media-element/commit/2ffa12dd8aa7a096cffc015bdeb6cb00b1cff561))
+* upgrade wet-run ([db4b46e](https://github.com/muxinc/custom-media-element/commit/db4b46e1ba41c78a17c6f52f8c3bba8ba2f2963c))
+
+
+### Features
+
+* add more ways to override / hook into  ([#15](https://github.com/muxinc/custom-media-element/issues/15)) ([299277c](https://github.com/muxinc/custom-media-element/commit/299277c4a94b356073e44f0b02838e13d77d208f))
+* add slot=media support for progressive ([#10](https://github.com/muxinc/custom-media-element/issues/10)) ([641896f](https://github.com/muxinc/custom-media-element/commit/641896f8506c3016f5e9ccf10191223a8e3e55fd))
+* use seperate apter tpl for video and audio ([139ef83](https://github.com/muxinc/custom-media-element/commit/139ef8332396b94b3c54a5c81a8c9da725e93b57))
+
+
+
 ## [1.2.3](https://github.com/muxinc/custom-media-element/compare/v1.2.2...v1.2.3) (2024-02-07)
 
 
