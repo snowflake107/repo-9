@@ -14,7 +14,7 @@ name = "pbjson_build"
 
 [dependencies]
 heck = "0.4"
-prost = "0.12"
+prost = "0.13"
 prost-types = "0.12"
 itertools = "0.12"
 
