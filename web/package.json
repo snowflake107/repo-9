@@ -21,7 +21,7 @@
     "auth0": "^4.10.0",
     "aws-sigv4-fetch": "^4.0.1",
     "chart.js": "^4.4.3",
-    "clsx": "^2.1.0",
+    "clsx": "^2.1.1",
     "cors": "^2.8.5",
     "countries-list": "^3.1.0",
     "date-fns": "^3.3.1",
