@@ -13,7 +13,7 @@ repository = "https://github.com/informalsystems/pbjson"
 name = "pbjson_build"
 
 [dependencies]
-heck = "0.4"
+heck = "0.5"
 prost = "0.12"
 prost-types = "0.12"
 itertools = "0.12"
