@@ -260,7 +260,7 @@ jobs:
         cache: npm
         node-version-file: .nvmrc
     - continue-on-error: true
-      uses: preactjs/compressed-size-action@8119d3d31b6e57b167e09c81dfa877eada3bcb35
+      uses: preactjs/compressed-size-action@6fa0e7ca017120c754863b31123c5ee2860fd434
       with:
         clean-script: distclean
         pattern: '{build/**/*.min.js,build/**/*.css}'
