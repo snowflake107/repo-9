@@ -272,7 +272,7 @@ jobs:
       uses: actions/checkout@v2
     - continue-on-error: true
       name: Anchore scan action
-      uses: anchore/scan-action@v2.0.4
+      uses: anchore/scan-action@v5.0.1
       with:
         acs-report-enable: true
         image: weblate/weblate:test
