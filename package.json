@@ -49,7 +49,7 @@
     "@babel/plugin-transform-nullish-coalescing-operator": "^7.24.1",
     "@playwright/test": "^1.43.1",
     "@swc/core": "^1.4.13",
-    "@types/node": "^20.12.7",
+    "@types/node": "^22.7.6",
     "@types/react": "^18.2.77",
     "@types/react-dom": "^18.2.25",
     "@typescript-eslint/eslint-plugin": "^7.6.0",
