@@ -283,7 +283,7 @@ jobs:
       run: echo "::set-output name=datetime::"$(date "+%Y%m%d_%H%M")
     - continue-on-error: true
       name: Upload benchmark artifact
-      uses: actions/upload-artifact@v3.1.0
+      uses: actions/upload-artifact@v4
       with:
         name: benchmark-${{ runner.os }}-${{ matrix.python-version }}_${{ steps.artifact-name-suffix.outputs.datetime
           }}
@@ -896,7 +896,7 @@ jobs:
         '
     - continue-on-error: true
       name: Upload coverage artifact
-      uses: actions/upload-artifact@v3.1.0
+      uses: actions/upload-artifact@v4
       with:
         name: coverage-${{ matrix.python-version }}
         path: .coverage

@@ -400,14 +400,14 @@ jobs:
         '
     - continue-on-error: true
       name: Upload output of PR
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: primer_output_pr
         path: tests/.pylint_primer_tests/output_${{ steps.python.outputs.python-version
           }}_pr.txt
     - continue-on-error: true
       name: Upload output of 'main'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: primer_output_main
         path: output_${{ steps.python.outputs.python-version }}_main.txt
@@ -418,7 +418,7 @@ jobs:
         '
     - continue-on-error: true
       name: Upload PR number
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: pr_number
         path: pr_number.txt
