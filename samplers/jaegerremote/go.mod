@@ -5,7 +5,7 @@ go 1.20
 require (
 	github.com/go-logr/logr v1.3.0
 	github.com/gogo/protobuf v1.3.2
-	github.com/stretchr/testify v1.8.4
+	github.com/stretchr/testify v1.9.0
 	go.opentelemetry.io/otel/sdk v1.21.0
 	go.opentelemetry.io/otel/trace v1.21.0
 	google.golang.org/genproto/googleapis/api v0.0.0-20230526203410-71b5a4ffd15e
