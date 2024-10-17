@@ -282,7 +282,7 @@ jobs:
       if: steps.find-comment.outputs.comment-id == '' && steps.changed-files-php.outputs.any_changed
         == 'true'
       name: Create comment
-      uses: peter-evans/create-or-update-comment@v3
+      uses: peter-evans/create-or-update-comment@v4
       with:
         body: "<!-- pr-contains-php-changes -->\nThis pull request has changed or\
           \ added PHP files. Please confirm whether these changes need to be synced\
@@ -298,7 +298,7 @@ jobs:
       if: steps.find-comment.outputs.comment-id != '' && steps.changed-files-php.outputs.any_changed
         == 'true'
       name: Update comment
-      uses: peter-evans/create-or-update-comment@v3
+      uses: peter-evans/create-or-update-comment@v4
       with:
         body: "<!-- pr-contains-php-changes -->\nThis pull request has changed or\
           \ added PHP files. Please confirm whether these changes need to be synced\
@@ -316,7 +316,7 @@ jobs:
       if: steps.find-comment.outputs.comment-id != '' && steps.changed-files-php.outputs.any_changed
         != 'true'
       name: Update comment
-      uses: peter-evans/create-or-update-comment@v3
+      uses: peter-evans/create-or-update-comment@v4
       with:
         body: '<!-- pr-contains-php-changes -->
 
