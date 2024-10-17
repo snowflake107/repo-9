@@ -312,7 +312,7 @@ jobs:
     - continue-on-error: true
       id: download-main-run
       name: Download last 'main' run info
-      uses: actions/github-script@v6
+      uses: actions/github-script@v7
       with:
         script: "// Download 'main' pylint output\nconst fs = require('fs');\nconst\
           \ { Octokit } = require(\"@octokit/rest\");\nconst octokit = new Octokit({});\n\
