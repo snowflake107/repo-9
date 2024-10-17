@@ -259,7 +259,7 @@ jobs:
         ref: ${{ needs.bump-version.outputs.release_branch || github.ref }}
     - continue-on-error: true
       name: Use desired version of Node.js
-      uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c
+      uses: actions/setup-node@0a44ba7841725637a19e28fa30b79a866c81b0a6
       with:
         cache: npm
         node-version-file: .nvmrc
@@ -1466,7 +1466,7 @@ jobs:
         '
     - continue-on-error: true
       name: Setup Node.js
-      uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c
+      uses: actions/setup-node@0a44ba7841725637a19e28fa30b79a866c81b0a6
       with:
         node-version-file: main/.nvmrc
         registry-url: https://registry.npmjs.org
