@@ -253,7 +253,7 @@ jobs:
       uses: actions/checkout@v2
     - continue-on-error: true
       name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
+      uses: docker/setup-buildx-action@v3
     - continue-on-error: true
       id: cache
       name: Cache Docker layers
@@ -547,7 +547,7 @@ jobs:
       uses: actions/checkout@v2
     - continue-on-error: true
       name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
+      uses: docker/setup-buildx-action@v3
     - continue-on-error: true
       id: cache
       name: Cache Docker layers
@@ -826,7 +826,7 @@ jobs:
         platforms: ${{ matrix.architecture }}
     - continue-on-error: true
       name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
+      uses: docker/setup-buildx-action@v3
     - continue-on-error: true
       id: cache
       name: Cache Docker layers
@@ -1108,7 +1108,7 @@ jobs:
         platforms: all
     - continue-on-error: true
       name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
+      uses: docker/setup-buildx-action@v3
     - continue-on-error: true
       id: cache-arm64
       name: Cache Docker layers
@@ -1396,7 +1396,7 @@ jobs:
         submodules: recursive
     - continue-on-error: true
       name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
+      uses: docker/setup-buildx-action@v3
     - continue-on-error: true
       id: cache
       name: Cache Docker layers
@@ -1761,7 +1761,7 @@ jobs:
         submodules: recursive
     - continue-on-error: true
       name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
+      uses: docker/setup-buildx-action@v3
     - continue-on-error: true
       id: cache
       name: Cache Docker layers
@@ -2139,7 +2139,7 @@ jobs:
       uses: actions/checkout@v2
     - continue-on-error: true
       name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
+      uses: docker/setup-buildx-action@v3
     - continue-on-error: true
       id: cache
       name: Cache Docker layers
