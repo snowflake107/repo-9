@@ -246,7 +246,7 @@ jobs:
         sudo sh -c ''echo 1 > /proc/sys/net/ipv4/ip_forward'''
     - continue-on-error: true
       name: Check PRs
-      uses: actions/stale@v5
+      uses: actions/stale@v9
       with:
         ascending: true
         days-before-close: -1
