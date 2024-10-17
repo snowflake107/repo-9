@@ -775,7 +775,7 @@ jobs:
       uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9
     - continue-on-error: true
       name: Set up PHP
-      uses: shivammathur/setup-php@4bd44f22a98a19e0950cbad5f31095157cc9621b
+      uses: shivammathur/setup-php@c541c155eee45413f5b09a52248675b1a2575231
       with:
         coverage: none
         php-version: '7.4'
@@ -1070,7 +1070,7 @@ jobs:
       uses: ./.github/setup-node
     - continue-on-error: true
       name: Set up PHP
-      uses: shivammathur/setup-php@4bd44f22a98a19e0950cbad5f31095157cc9621b
+      uses: shivammathur/setup-php@c541c155eee45413f5b09a52248675b1a2575231
       with:
         coverage: none
         ini-file: development
