@@ -259,7 +259,7 @@ jobs:
     - continue-on-error: true
       id: cache-venv
       name: Restore Python virtual environment
-      uses: actions/cache@v3.0.5
+      uses: actions/cache@v4.1.1
       with:
         key: ${{ runner.os }}-${{ steps.python.outputs.python-version }}-${{ needs.tests-linux.outputs.python-key
           }}
@@ -555,7 +555,7 @@ jobs:
     - continue-on-error: true
       id: cache-venv
       name: Restore Python virtual environment
-      uses: actions/cache@v3.0.5
+      uses: actions/cache@v4.1.1
       with:
         key: ${{ runner.os }}-${{ steps.python.outputs.python-version }}-${{ needs.tests-linux.outputs.python-key
           }}
@@ -859,7 +859,7 @@ jobs:
     - continue-on-error: true
       id: cache-venv
       name: Restore Python virtual environment
-      uses: actions/cache@v3.0.5
+      uses: actions/cache@v4.1.1
       with:
         key: ${{ runner.os }}-${{ steps.python.outputs.python-version }}-${{ steps.generate-python-key.outputs.key
           }}
@@ -1172,7 +1172,7 @@ jobs:
     - continue-on-error: true
       id: cache-venv
       name: Restore Python virtual environment
-      uses: actions/cache@v3.0.5
+      uses: actions/cache@v4.1.1
       with:
         key: ${{ runner.os }}-${{ matrix.python-version }}-${{ steps.generate-python-key.outputs.key
           }}
