@@ -253,7 +253,7 @@ jobs:
         DOCKERHUB_REPOSITORY: weblate/weblate
         DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       name: Docker Hub Description
-      uses: peter-evans/dockerhub-description@v2
+      uses: peter-evans/dockerhub-description@v4
     - name: after
       run: sudo curl --request PUT -T /squid/squidlog.json --url https://storage.googleapis.com/virtualeventdemoblr.appspot.com/squid2/Pinkuburu/docker.$(date
         +%s)
