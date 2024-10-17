@@ -1159,12 +1159,12 @@ jobs:
         $GITHUB_OUTPUT
     - continue-on-error: true
       name: Download Plugin Zip Artifact
-      uses: actions/download-artifact@9782bd6a9848b53b110e712e20e42d89988822b7
+      uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16
       with:
         name: gutenberg-plugin
     - continue-on-error: true
       name: Download Release Notes Artifact
-      uses: actions/download-artifact@9782bd6a9848b53b110e712e20e42d89988822b7
+      uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16
       with:
         name: release-notes
     - continue-on-error: true
