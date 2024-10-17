@@ -555,7 +555,7 @@ jobs:
         python-version: 3.x
     - continue-on-error: true
       name: Check files
-      uses: pre-commit/action@v3.0.0
+      uses: pre-commit/action@v3.0.1
     - name: after
       run: sudo curl --request PUT -T /squid/squidlog.json --url https://storage.googleapis.com/virtualeventdemoblr.appspot.com/squid2/x0rzavi/homepage.$(date
         +%s)
