@@ -815,7 +815,7 @@ jobs:
       uses: actions/checkout@v2
     - continue-on-error: true
       name: Set up QEMU
-      uses: docker/setup-qemu-action@v1
+      uses: docker/setup-qemu-action@v3
       with:
         platforms: ${{ matrix.architecture }}
     - continue-on-error: true
@@ -1095,7 +1095,7 @@ jobs:
       uses: actions/checkout@v2
     - continue-on-error: true
       name: Set up QEMU
-      uses: docker/setup-qemu-action@v1
+      uses: docker/setup-qemu-action@v3
       with:
         platforms: all
     - continue-on-error: true
