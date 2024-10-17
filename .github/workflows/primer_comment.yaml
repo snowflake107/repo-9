@@ -254,7 +254,7 @@ jobs:
       run: npm install @octokit/rest
     - continue-on-error: true
       name: Check out code from GitHub
-      uses: actions/checkout@v3.0.2
+      uses: actions/checkout@v4.2.1
     - continue-on-error: true
       id: python
       name: Set up Python 3.10
